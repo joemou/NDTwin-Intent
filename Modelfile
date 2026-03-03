@@ -1,0 +1,32 @@
+FROM ./model-unsloth-q4_k_m.gguf
+
+# 1. 設定 Llama 3 對話模板 (這是最關鍵的，讓模型知道誰是 User 誰是 System)
+TEMPLATE """{{ if .System }}<|start_header_id|>system<|end_header_id|>
+
+{{ .System }}<|eot_id|>{{ end }}{{ if .Prompt }}<|start_header_id|>user<|end_header_id|>
+
+{{ .Prompt }}<|eot_id|>{{ end }}<|start_header_id|>assistant<|end_header_id|>
+
+{{ .Response }}<|eot_id|>"""
+
+# 2. 設定停止參數 (看到這些就閉嘴)
+PARAMETER stop "<|start_header_id|>"
+PARAMETER stop "<|end_header_id|>"
+PARAMETER stop "<|eot_id|>"
+
+# 3. 限制 Context Window (解決 11GB 佔用過大問題)
+PARAMETER num_ctx 8192
+
+# 4. 強制低溫 (讓 JSON 穩定)
+PARAMETER temperature 0.1
+
+# 5. 強制 System Prompt (加上 Few-Shot 範例)
+SYSTEM """You control a network system. You are a classification task agent. Respond in the specified JSON format ONLY. 
+If a command is potentially disruptive, your default action is to enter the discussion state to ask for confirmation. 
+However, if the user's prompt includes a confirmation flag like --confirm or --force, you are permitted to skip the discussion and proceed directly to the answer. 
+If the user wants to Install, Modify, or Delete flows, ALWAYS use the RequestUIForm task.
+
+Example:
+User: "Show topology"
+Assistant: {"state":"answer", "valid":1, "explanation":"Retrieving topology", "tasks":[{"type":"GetTopology"}]}
+"""

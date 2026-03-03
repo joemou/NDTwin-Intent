@@ -1,0 +1,272 @@
+[
+  {
+    "input": "List all devices on the network.",
+    "reason": "Task type mismatch",
+    "expected": {
+      "state": "answer",
+      "valid": 1,
+      "explanation": "Retrieving all known hosts.",
+      "tasks": [
+        {
+          "order": 1,
+          "type": "GetAllHosts",
+          "parameters": {}
+        }
+      ]
+    },
+    "actual_parsed": {
+      "state": "answer",
+      "valid": 1,
+      "explanation": "Retrieving the list of active switches and hosts.",
+      "tasks": [
+        {
+          "order": 1,
+          "type": "GetAllDevices",
+          "parameters": {}
+        }
+      ]
+    }
+  },
+  {
+    "input": "Limit rate on s1.",
+    "reason": "State mismatch (Expected: answer, Actual: discussion)",
+    "expected": {
+      "state": "answer",
+      "valid": 1,
+      "explanation": "Installing meter on s1.",
+      "tasks": [
+        {
+          "order": 1,
+          "type": "InstallMeterEntry",
+          "parameters": {
+            "device_name": "s1",
+            "meter_id": 1,
+            "flags": [
+              "KBPS"
+            ],
+            "bands": [
+              {
+                "type": "DROP",
+                "rate": 1000
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "actual_parsed": {
+      "state": "discussion",
+      "prompt": "Please specify the rate limit and the duration. This will help me create a more accurate rule."
+    }
+  },
+  {
+    "input": "Force reroute flow from h2 to h5 via s8.",
+    "reason": "State mismatch (Expected: answer, Actual: discussion)",
+    "expected": {
+      "state": "answer",
+      "valid": 1,
+      "explanation": "Rerouting flow path manually.",
+      "tasks": [
+        {
+          "order": 1,
+          "type": "RerouteFlow",
+          "parameters": {
+            "match": {
+              "src": "h2",
+              "dst": "h5"
+            },
+            "new_path": [
+              "s8"
+            ]
+          }
+        }
+      ]
+    },
+    "actual_parsed": {
+      "state": "discussion",
+      "prompt": "Rerouting the flow will change network paths. Confirm?"
+    }
+  },
+  {
+    "input": "List all ports status on s3.",
+    "reason": "Task type mismatch",
+    "expected": {
+      "state": "answer",
+      "valid": 1,
+      "explanation": "Retrieving s3 port status list.",
+      "tasks": [
+        {
+          "order": 1,
+          "type": "GetSwitchPorts",
+          "parameters": {
+            "device_name": "s3"
+          }
+        }
+      ]
+    },
+    "actual_parsed": {
+      "state": "answer",
+      "valid": 1,
+      "explanation": "Retrieving detailed port status for s3.",
+      "tasks": [
+        {
+          "order": 1,
+          "type": "GetSwitchPortsStatus",
+          "parameters": {
+            "device_name": "s3"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "input": "List all devices on the network.",
+    "reason": "Task type mismatch",
+    "expected": {
+      "state": "answer",
+      "valid": 1,
+      "explanation": "Retrieving all known hosts.",
+      "tasks": [
+        {
+          "order": 1,
+          "type": "GetAllHosts",
+          "parameters": {}
+        }
+      ]
+    },
+    "actual_parsed": {
+      "state": "answer",
+      "valid": 1,
+      "explanation": "Retrieving the list of all active switches and hosts.",
+      "tasks": [
+        {
+          "order": 1,
+          "type": "GetAllDevices",
+          "parameters": {}
+        }
+      ]
+    }
+  },
+  {
+    "input": "Limit rate on s1.",
+    "reason": "State mismatch (Expected: answer, Actual: discussion)",
+    "expected": {
+      "state": "answer",
+      "valid": 1,
+      "explanation": "Installing meter on s1.",
+      "tasks": [
+        {
+          "order": 1,
+          "type": "InstallMeterEntry",
+          "parameters": {
+            "device_name": "s1",
+            "meter_id": 1,
+            "flags": [
+              "KBPS"
+            ],
+            "bands": [
+              {
+                "type": "DROP",
+                "rate": 1000
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "actual_parsed": {
+      "state": "discussion",
+      "prompt": "Please specify the rate limit and the duration. This will help me create a more accurate rule."
+    }
+  },
+  {
+    "input": "Show me the macs learned on s4.",
+    "reason": "Task type mismatch",
+    "expected": {
+      "state": "answer",
+      "valid": 1,
+      "explanation": "Retrieving the MAC table for switch s4.",
+      "tasks": [
+        {
+          "order": 1,
+          "type": "GetMacTable",
+          "parameters": {
+            "device_name": "s4"
+          }
+        }
+      ]
+    },
+    "actual_parsed": {
+      "state": "answer",
+      "valid": 1,
+      "explanation": "Retrieving learned MAC addresses on s4.",
+      "tasks": [
+        {
+          "order": 1,
+          "type": "GetLearnedMacCount",
+          "parameters": {
+            "device_name": "s4"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "input": "What is the temperature of s1?",
+    "reason": "Task type mismatch",
+    "expected": {
+      "state": "answer",
+      "valid": 1,
+      "explanation": "Retrieving temperature for all switches (s1 included).",
+      "tasks": [
+        {
+          "order": 1,
+          "type": "GetSwitchTemperature",
+          "parameters": {}
+        }
+      ]
+    },
+    "actual_parsed": {
+      "state": "answer",
+      "valid": 1,
+      "explanation": "Retrieving temperature for s1.",
+      "tasks": [
+        {
+          "order": 1,
+          "type": "GetDeviceTemperature",
+          "parameters": {
+            "device_name": "s1"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "input": "What are the OpenFlow capabilities for our switches?",
+    "reason": "Task type mismatch",
+    "expected": {
+      "state": "answer",
+      "valid": 1,
+      "explanation": "Checking supported actions and tables.",
+      "tasks": [
+        {
+          "order": 1,
+          "type": "GetSwitchCapabilities",
+          "parameters": {}
+        }
+      ]
+    },
+    "actual_parsed": {
+      "state": "answer",
+      "valid": 1,
+      "explanation": "Retrieving OpenFlow capabilities for switches.",
+      "tasks": [
+        {
+          "order": 1,
+          "type": "GetSwitchOpenFlowCapabilities",
+          "parameters": {}
+        }
+      ]
+    }
+  }
+]

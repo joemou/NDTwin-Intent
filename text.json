@@ -1,0 +1,282 @@
+[
+  {
+    "conversations": [
+      {"from": "system", "value": "You control a network system. You are a classification task agent. Respond in the specified JSON format. RULES: 1. If a command is potentially disruptive (e.g., Disable, PowerOff, Block, Delete, Drop, Modify, Reroute), your default action is to enter the \"discussion\" state to ask for confirmation. 2. If the user's prompt includes a confirmation flag like --confirm or --force, skip the discussion and proceed directly to \"answer\". 3. Keep the \"explanation\" field extremely concise (under 15 words). DO NOT think out loud or explain your internal logic."},
+      {"from": "human", "value": "What are the OpenFlow capabilities of our switches?"},
+      {"from": "gpt", "value": "{\"state\":\"answer\",\"valid\":1,\"explanation\":\"Checking supported actions and tables.\",\"tasks\":[{\"order\":1,\"type\":\"GetSwitchCapabilities\",\"parameters\":{}}]}"}
+    ]
+  },
+  {
+    "conversations": [
+      {"from": "system", "value": "You control a network system. You are a classification task agent. Respond in the specified JSON format. RULES: 1. If a command is potentially disruptive (e.g., Disable, PowerOff, Block, Delete, Drop, Modify, Reroute), your default action is to enter the \"discussion\" state to ask for confirmation. 2. If the user's prompt includes a confirmation flag like --confirm or --force, skip the discussion and proceed directly to \"answer\". 3. Keep the \"explanation\" field extremely concise (under 15 words). DO NOT think out loud or explain your internal logic."},
+      {"from": "human", "value": "What capabilities does s1 have?"},
+      {"from": "gpt", "value": "{\"state\":\"answer\",\"valid\":1,\"explanation\":\"Retrieving capabilities for switches.\",\"tasks\":[{\"order\":1,\"type\":\"GetSwitchCapabilities\",\"parameters\":{}}]}"}
+    ]
+  },
+  {
+    "conversations": [
+      {"from": "system", "value": "You control a network system. You are a classification task agent. Respond in the specified JSON format. RULES: 1. If a command is potentially disruptive (e.g., Disable, PowerOff, Block, Delete, Drop, Modify, Reroute), your default action is to enter the \"discussion\" state to ask for confirmation. 2. If the user's prompt includes a confirmation flag like --confirm or --force, skip the discussion and proceed directly to \"answer\". 3. Keep the \"explanation\" field extremely concise (under 15 words). DO NOT think out loud or explain your internal logic."},
+      {"from": "human", "value": "Packet loss between s1 and s3."},
+      {"from": "gpt", "value": "{\"state\":\"answer\",\"valid\":1,\"explanation\":\"Measuring packet loss rate between s1 and s3.\",\"tasks\":[{\"order\":1,\"type\":\"GetPacketLossRate\",\"parameters\":{\"src\":\"s1\",\"dst\":\"s3\"}}]}"}
+    ]
+  },
+  {
+    "conversations": [
+      {"from": "system", "value": "You control a network system. You are a classification task agent. Respond in the specified JSON format. RULES: 1. If a command is potentially disruptive (e.g., Disable, PowerOff, Block, Delete, Drop, Modify, Reroute), your default action is to enter the \"discussion\" state to ask for confirmation. 2. If the user's prompt includes a confirmation flag like --confirm or --force, skip the discussion and proceed directly to \"answer\". 3. Keep the \"explanation\" field extremely concise (under 15 words). DO NOT think out loud or explain your internal logic."},
+      {"from": "human", "value": "Is there any packet drop on s1-s4 link?"},
+      {"from": "gpt", "value": "{\"state\":\"answer\",\"valid\":1,\"explanation\":\"Checking for packet loss issues.\",\"tasks\":[{\"order\":1,\"type\":\"GetPacketLossRate\",\"parameters\":{\"src\":\"s1\",\"dst\":\"s4\"}}]}"}
+    ]
+  },
+  {
+    "conversations": [
+      {"from": "system", "value": "You control a network system. You are a classification task agent. Respond in the specified JSON format. RULES: 1. If a command is potentially disruptive (e.g., Disable, PowerOff, Block, Delete, Drop, Modify, Reroute), your default action is to enter the \"discussion\" state to ask for confirmation. 2. If the user's prompt includes a confirmation flag like --confirm or --force, skip the discussion and proceed directly to \"answer\". 3. Keep the \"explanation\" field extremely concise (under 15 words). DO NOT think out loud or explain your internal logic."},
+      {"from": "human", "value": "Limit rate on s1."},
+      {"from": "gpt", "value": "{\"state\":\"answer\",\"valid\":1,\"explanation\":\"Installing meter on s1.\",\"tasks\":[{\"order\":1,\"type\":\"InstallMeterEntry\",\"parameters\":{\"device_name\":\"s1\",\"meter_id\":1,\"flags\":[\"KBPS\"],\"bands\":[{\"type\":\"DROP\",\"rate\":1000}]}}]}"}
+    ]
+  },
+  {
+    "conversations": [
+      {"from": "system", "value": "You control a network system. You are a classification task agent. Respond in the specified JSON format. RULES: 1. If a command is potentially disruptive (e.g., Disable, PowerOff, Block, Delete, Drop, Modify, Reroute), your default action is to enter the \"discussion\" state to ask for confirmation. 2. If the user's prompt includes a confirmation flag like --confirm or --force, skip the discussion and proceed directly to \"answer\". 3. Keep the \"explanation\" field extremely concise (under 15 words). DO NOT think out loud or explain your internal logic."},
+      {"from": "human", "value": "Block traffic on s3 --force"},
+      {"from": "gpt", "value": "{\"state\":\"answer\",\"valid\":1,\"explanation\":\"Applying drop flow on s3.\",\"tasks\":[{\"order\":1,\"type\":\"InstallFlowEntry\",\"parameters\":{\"device_name\":\"s3\",\"priority\":100,\"match\":{},\"actions\":[]}}]}"}
+    ]
+  },
+  {
+    "conversations": [
+      {"from": "system", "value": "You control a network system. You are a classification task agent. Respond in the specified JSON format. RULES: 1. If a command is potentially disruptive (e.g., Disable, PowerOff, Block, Delete, Drop, Modify, Reroute), your default action is to enter the \"discussion\" state to ask for confirmation. 2. If the user's prompt includes a confirmation flag like --confirm or --force, skip the discussion and proceed directly to \"answer\". 3. Keep the \"explanation\" field extremely concise (under 15 words). DO NOT think out loud or explain your internal logic."},
+      {"from": "human", "value": "Drop all traffic on s1 --force"},
+      {"from": "gpt", "value": "{\"state\":\"answer\",\"valid\":1,\"explanation\":\"Installing drop flow on s1.\",\"tasks\":[{\"order\":1,\"type\":\"InstallFlowEntry\",\"parameters\":{\"device_name\":\"s1\",\"priority\":100,\"match\":{},\"actions\":[]}}]}"}
+    ]
+  },
+  {
+    "conversations": [
+      {"from": "system", "value": "You control a network system. You are a classification task agent. Respond in the specified JSON format. RULES: 1. If a command is potentially disruptive (e.g., Disable, PowerOff, Block, Delete, Drop, Modify, Reroute), your default action is to enter the \"discussion\" state to ask for confirmation. 2. If the user's prompt includes a confirmation flag like --confirm or --force, skip the discussion and proceed directly to \"answer\". 3. Keep the \"explanation\" field extremely concise (under 15 words). DO NOT think out loud or explain your internal logic."},
+      {"from": "human", "value": "Drop the hammer on h4 --force"},
+      {"from": "gpt", "value": "{\"state\":\"answer\",\"valid\":1,\"explanation\":\"Applying a block rule to isolate host h4.\",\"tasks\":[{\"order\":1,\"type\":\"BlockHost\",\"parameters\":{\"host_id\":\"h4\"}}]}"}
+    ]
+  },
+  {
+    "conversations": [
+      {"from": "system", "value": "You control a network system. You are a classification task agent. Respond in the specified JSON format. RULES: 1. If a command is potentially disruptive (e.g., Disable, PowerOff, Block, Delete, Drop, Modify, Reroute), your default action is to enter the \"discussion\" state to ask for confirmation. 2. If the user's prompt includes a confirmation flag like --confirm or --force, skip the discussion and proceed directly to \"answer\". 3. Keep the \"explanation\" field extremely concise (under 15 words). DO NOT think out loud or explain your internal logic."},
+      {"from": "human", "value": "What is the memory usage of s3?"},
+      {"from": "gpt", "value": "{\"state\":\"answer\",\"valid\":1,\"explanation\":\"Retrieving memory utilization for s3 via health check.\",\"tasks\":[{\"order\":1,\"type\":\"GetDeviceHealth\",\"parameters\":{\"device_name\":\"s3\"}}]}"}
+    ]
+  },
+  {
+    "conversations": [
+      {"from": "system", "value": "You control a network system. You are a classification task agent. Respond in the specified JSON format. RULES: 1. If a command is potentially disruptive (e.g., Disable, PowerOff, Block, Delete, Drop, Modify, Reroute), your default action is to enter the \"discussion\" state to ask for confirmation. 2. If the user's prompt includes a confirmation flag like --confirm or --force, skip the discussion and proceed directly to \"answer\". 3. Keep the \"explanation\" field extremely concise (under 15 words). DO NOT think out loud or explain your internal logic."},
+      {"from": "human", "value": "List all active flows."},
+      {"from": "gpt", "value": "{\"state\":\"answer\",\"valid\":1,\"explanation\":\"Counting all active flows.\",\"tasks\":[{\"order\":1,\"type\":\"GetActiveFlowCount\",\"parameters\":{}}]}"}
+    ]
+  },
+  {
+    "conversations": [
+      {"from": "system", "value": "You control a network system. You are a classification task agent. Respond in the specified JSON format. RULES: 1. If a command is potentially disruptive (e.g., Disable, PowerOff, Block, Delete, Drop, Modify, Reroute), your default action is to enter the \"discussion\" state to ask for confirmation. 2. If the user's prompt includes a confirmation flag like --confirm or --force, skip the discussion and proceed directly to \"answer\". 3. Keep the \"explanation\" field extremely concise (under 15 words). DO NOT think out loud or explain your internal logic."},
+      {"from": "human", "value": "List all devices on the network."},
+      {"from": "gpt", "value": "{\"state\":\"answer\",\"valid\":1,\"explanation\":\"Retrieving all known hosts.\",\"tasks\":[{\"order\":1,\"type\":\"GetAllHosts\",\"parameters\":{}}]}"}
+    ]
+  },
+  {
+    "conversations": [
+      {"from": "system", "value": "You control a network system. You are a classification task agent. Respond in the specified JSON format. RULES: 1. If a command is potentially disruptive (e.g., Disable, PowerOff, Block, Delete, Drop, Modify, Reroute), your default action is to enter the \"discussion\" state to ask for confirmation. 2. If the user's prompt includes a confirmation flag like --confirm or --force, skip the discussion and proceed directly to \"answer\". 3. Keep the \"explanation\" field extremely concise (under 15 words). DO NOT think out loud or explain your internal logic."},
+      {"from": "human", "value": "Change the port status to DOWN."},
+      {"from": "gpt", "value": "{\"state\":\"discussion\",\"prompt\":\"Please provide the device name and the port ID you wish to disable.\"}"}
+    ]
+  },
+  {
+    "conversations": [
+      {"from": "system", "value": "You control a network system. You are a classification task agent. Respond in the specified JSON format. RULES: 1. If a command is potentially disruptive (e.g., Disable, PowerOff, Block, Delete, Drop, Modify, Reroute), your default action is to enter the \"discussion\" state to ask for confirmation. 2. If the user's prompt includes a confirmation flag like --confirm or --force, skip the discussion and proceed directly to \"answer\". 3. Keep the \"explanation\" field extremely concise (under 15 words). DO NOT think out loud or explain your internal logic."},
+      {"from": "human", "value": "Clear device logs."},
+      {"from": "gpt", "value": "{\"state\":\"discussion\",\"prompt\":\"Please specify which device's logs you want to clear. Also confirm as this is disruptive.\"}"}
+    ]
+  },
+  {
+    "conversations": [
+      {"from": "system", "value": "You control a network system. You are a classification task agent. Respond in the specified JSON format. RULES: 1. If a command is potentially disruptive (e.g., Disable, PowerOff, Block, Delete, Drop, Modify, Reroute), your default action is to enter the \"discussion\" state to ask for confirmation. 2. If the user's prompt includes a confirmation flag like --confirm or --force, skip the discussion and proceed directly to \"answer\". 3. Keep the \"explanation\" field extremely concise (under 15 words). DO NOT think out loud or explain your internal logic."},
+      {"from": "human", "value": "Add a load balancing group to s3."},
+      {"from": "gpt", "value": "{\"state\":\"answer\",\"valid\":1,\"explanation\":\"Installing group table entry on s3.\",\"tasks\":[{\"order\":1,\"type\":\"InstallGroupEntry\",\"parameters\":{\"device_name\":\"s3\",\"group_type\":\"select\",\"group_id\":1,\"buckets\":[{\"actions\":[]}]}}]}"}
+    ]
+  },
+  {
+    "conversations": [
+      {"from": "system", "value": "You control a network system. You are a classification task agent. Respond in the specified JSON format. RULES: 1. If a command is potentially disruptive (e.g., Disable, PowerOff, Block, Delete, Drop, Modify, Reroute), your default action is to enter the \"discussion\" state to ask for confirmation. 2. If the user's prompt includes a confirmation flag like --confirm or --force, skip the discussion and proceed directly to \"answer\". 3. Keep the \"explanation\" field extremely concise (under 15 words). DO NOT think out loud or explain your internal logic."},
+      {"from": "human", "value": "What is the uptime?"},
+      {"from": "gpt", "value": "{\"state\":\"discussion\",\"prompt\":\"Please specify which device's uptime you want to check.\"}"}
+    ]
+  },
+  {
+    "conversations": [
+      {"from": "system", "value": "You control a network system. You are a classification task agent. Respond in the specified JSON format. RULES: 1. If a command is potentially disruptive (e.g., Disable, PowerOff, Block, Delete, Drop, Modify, Reroute), your default action is to enter the \"discussion\" state to ask for confirmation. 2. If the user's prompt includes a confirmation flag like --confirm or --force, skip the discussion and proceed directly to \"answer\". 3. Keep the \"explanation\" field extremely concise (under 15 words). DO NOT think out loud or explain your internal logic."},
+      {"from": "human", "value": "How long is s1 online?"},
+      {"from": "gpt", "value": "{\"state\":\"answer\",\"valid\":1,\"explanation\":\"Retrieving uptime for s1.\",\"tasks\":[{\"order\":1,\"type\":\"GetDeviceUptime\",\"parameters\":{\"device_name\":\"s1\"}}]}"}
+    ]
+  },
+  {
+    "conversations": [
+      {"from": "system", "value": "You control a network system. You are a classification task agent. Respond in the specified JSON format. RULES: 1. If a command is potentially disruptive (e.g., Disable, PowerOff, Block, Delete, Drop, Modify, Reroute), your default action is to enter the \"discussion\" state to ask for confirmation. 2. If the user's prompt includes a confirmation flag like --confirm or --force, skip the discussion and proceed directly to \"answer\". 3. Keep the \"explanation\" field extremely concise (under 15 words). DO NOT think out loud or explain your internal logic."},
+      {"from": "human", "value": "Edit rule on s4 to output to port 4."},
+      {"from": "gpt", "value": "{\"state\":\"discussion\",\"prompt\":\"Editing a rule will change routing paths. Confirm?\"}"}
+    ]
+  },
+  {
+    "conversations": [
+      {"from": "system", "value": "You control a network system. You are a classification task agent. Respond in the specified JSON format. RULES: 1. If a command is potentially disruptive (e.g., Disable, PowerOff, Block, Delete, Drop, Modify, Reroute), your default action is to enter the \"discussion\" state to ask for confirmation. 2. If the user's prompt includes a confirmation flag like --confirm or --force, skip the discussion and proceed directly to \"answer\". 3. Keep the \"explanation\" field extremely concise (under 15 words). DO NOT think out loud or explain your internal logic."},
+      {"from": "human", "value": "Change flow on s3 to port 3."},
+      {"from": "gpt", "value": "{\"state\":\"discussion\",\"prompt\":\"Changing the flow destination alters network routing. Do you wish to continue?\"}"}
+    ]
+  },
+  {
+    "conversations": [
+      {"from": "system", "value": "You control a network system. You are a classification task agent. Respond in the specified JSON format. RULES: 1. If a command is potentially disruptive (e.g., Disable, PowerOff, Block, Delete, Drop, Modify, Reroute), your default action is to enter the \"discussion\" state to ask for confirmation. 2. If the user's prompt includes a confirmation flag like --confirm or --force, skip the discussion and proceed directly to \"answer\". 3. Keep the \"explanation\" field extremely concise (under 15 words). DO NOT think out loud or explain your internal logic."},
+      {"from": "human", "value": "Install a flow to drop packets from 10.0.0.1 on s2."},
+      {"from": "gpt", "value": "{\"state\":\"discussion\",\"prompt\":\"Installing a drop rule will block traffic from 10.0.0.1. Confirm?\"}"}
+    ]
+  },
+  {
+    "conversations": [
+      {"from": "system", "value": "You control a network system. You are a classification task agent. Respond in the specified JSON format. RULES: 1. If a command is potentially disruptive (e.g., Disable, PowerOff, Block, Delete, Drop, Modify, Reroute), your default action is to enter the \"discussion\" state to ask for confirmation. 2. If the user's prompt includes a confirmation flag like --confirm or --force, skip the discussion and proceed directly to \"answer\". 3. Keep the \"explanation\" field extremely concise (under 15 words). DO NOT think out loud or explain your internal logic."},
+      {"from": "human", "value": "Set port to UP."},
+      {"from": "gpt", "value": "{\"state\":\"discussion\",\"prompt\":\"Please specify both the device name and the port ID you wish to enable.\"}"}
+    ]
+  },
+{
+    "conversations": [
+      {"from": "system", "value": "You control a network system. You are a classification task agent. Respond in the specified JSON format. RULES: 1. If a command is potentially disruptive (e.g., Disable, PowerOff, Block, Delete, Drop, Modify, Reroute), your default action is to enter the \"discussion\" state to ask for confirmation. 2. If the user's prompt includes a confirmation flag like --confirm or --force, skip the discussion and proceed directly to \"answer\". 3. Keep the \"explanation\" field extremely concise (under 15 words). DO NOT think out loud or explain your internal logic."},
+      {"from": "human", "value": "What are the OpenFlow capabilities of our switches?"},
+      {"from": "gpt", "value": "{\"state\":\"answer\",\"valid\":1,\"explanation\":\"Checking supported actions and tables.\",\"tasks\":[{\"order\":1,\"type\":\"GetSwitchCapabilities\",\"parameters\":{}}]}"}
+    ]
+  },
+  {
+    "conversations": [
+      {"from": "system", "value": "You control a network system. You are a classification task agent. Respond in the specified JSON format. RULES: 1. If a command is potentially disruptive (e.g., Disable, PowerOff, Block, Delete, Drop, Modify, Reroute), your default action is to enter the \"discussion\" state to ask for confirmation. 2. If the user's prompt includes a confirmation flag like --confirm or --force, skip the discussion and proceed directly to \"answer\". 3. Keep the \"explanation\" field extremely concise (under 15 words). DO NOT think out loud or explain your internal logic."},
+      {"from": "human", "value": "What capabilities does s1 have?"},
+      {"from": "gpt", "value": "{\"state\":\"answer\",\"valid\":1,\"explanation\":\"Retrieving capabilities for switches.\",\"tasks\":[{\"order\":1,\"type\":\"GetSwitchCapabilities\",\"parameters\":{}}]}"}
+    ]
+  },
+  {
+    "conversations": [
+      {"from": "system", "value": "You control a network system. You are a classification task agent. Respond in the specified JSON format. RULES: 1. If a command is potentially disruptive (e.g., Disable, PowerOff, Block, Delete, Drop, Modify, Reroute), your default action is to enter the \"discussion\" state to ask for confirmation. 2. If the user's prompt includes a confirmation flag like --confirm or --force, skip the discussion and proceed directly to \"answer\". 3. Keep the \"explanation\" field extremely concise (under 15 words). DO NOT think out loud or explain your internal logic."},
+      {"from": "human", "value": "Packet loss between s1 and s3."},
+      {"from": "gpt", "value": "{\"state\":\"answer\",\"valid\":1,\"explanation\":\"Measuring packet loss rate between s1 and s3.\",\"tasks\":[{\"order\":1,\"type\":\"GetPacketLossRate\",\"parameters\":{\"src\":\"s1\",\"dst\":\"s3\"}}]}"}
+    ]
+  },
+  {
+    "conversations": [
+      {"from": "system", "value": "You control a network system. You are a classification task agent. Respond in the specified JSON format. RULES: 1. If a command is potentially disruptive (e.g., Disable, PowerOff, Block, Delete, Drop, Modify, Reroute), your default action is to enter the \"discussion\" state to ask for confirmation. 2. If the user's prompt includes a confirmation flag like --confirm or --force, skip the discussion and proceed directly to \"answer\". 3. Keep the \"explanation\" field extremely concise (under 15 words). DO NOT think out loud or explain your internal logic."},
+      {"from": "human", "value": "Is there any packet drop on s1-s4 link?"},
+      {"from": "gpt", "value": "{\"state\":\"answer\",\"valid\":1,\"explanation\":\"Checking for packet loss issues.\",\"tasks\":[{\"order\":1,\"type\":\"GetPacketLossRate\",\"parameters\":{\"src\":\"s1\",\"dst\":\"s4\"}}]}"}
+    ]
+  },
+  {
+    "conversations": [
+      {"from": "system", "value": "You control a network system. You are a classification task agent. Respond in the specified JSON format. RULES: 1. If a command is potentially disruptive (e.g., Disable, PowerOff, Block, Delete, Drop, Modify, Reroute), your default action is to enter the \"discussion\" state to ask for confirmation. 2. If the user's prompt includes a confirmation flag like --confirm or --force, skip the discussion and proceed directly to \"answer\". 3. Keep the \"explanation\" field extremely concise (under 15 words). DO NOT think out loud or explain your internal logic."},
+      {"from": "human", "value": "Limit rate on s1."},
+      {"from": "gpt", "value": "{\"state\":\"answer\",\"valid\":1,\"explanation\":\"Installing meter on s1.\",\"tasks\":[{\"order\":1,\"type\":\"InstallMeterEntry\",\"parameters\":{\"device_name\":\"s1\",\"meter_id\":1,\"flags\":[\"KBPS\"],\"bands\":[{\"type\":\"DROP\",\"rate\":1000}]}}]}"}
+    ]
+  },
+  {
+    "conversations": [
+      {"from": "system", "value": "You control a network system. You are a classification task agent. Respond in the specified JSON format. RULES: 1. If a command is potentially disruptive (e.g., Disable, PowerOff, Block, Delete, Drop, Modify, Reroute), your default action is to enter the \"discussion\" state to ask for confirmation. 2. If the user's prompt includes a confirmation flag like --confirm or --force, skip the discussion and proceed directly to \"answer\". 3. Keep the \"explanation\" field extremely concise (under 15 words). DO NOT think out loud or explain your internal logic."},
+      {"from": "human", "value": "Block traffic on s3 --force"},
+      {"from": "gpt", "value": "{\"state\":\"answer\",\"valid\":1,\"explanation\":\"Applying drop flow on s3.\",\"tasks\":[{\"order\":1,\"type\":\"InstallFlowEntry\",\"parameters\":{\"device_name\":\"s3\",\"priority\":100,\"match\":{},\"actions\":[]}}]}"}
+    ]
+  },
+  {
+    "conversations": [
+      {"from": "system", "value": "You control a network system. You are a classification task agent. Respond in the specified JSON format. RULES: 1. If a command is potentially disruptive (e.g., Disable, PowerOff, Block, Delete, Drop, Modify, Reroute), your default action is to enter the \"discussion\" state to ask for confirmation. 2. If the user's prompt includes a confirmation flag like --confirm or --force, skip the discussion and proceed directly to \"answer\". 3. Keep the \"explanation\" field extremely concise (under 15 words). DO NOT think out loud or explain your internal logic."},
+      {"from": "human", "value": "Drop all traffic on s1 --force"},
+      {"from": "gpt", "value": "{\"state\":\"answer\",\"valid\":1,\"explanation\":\"Installing drop flow on s1.\",\"tasks\":[{\"order\":1,\"type\":\"InstallFlowEntry\",\"parameters\":{\"device_name\":\"s1\",\"priority\":100,\"match\":{},\"actions\":[]}}]}"}
+    ]
+  },
+  {
+    "conversations": [
+      {"from": "system", "value": "You control a network system. You are a classification task agent. Respond in the specified JSON format. RULES: 1. If a command is potentially disruptive (e.g., Disable, PowerOff, Block, Delete, Drop, Modify, Reroute), your default action is to enter the \"discussion\" state to ask for confirmation. 2. If the user's prompt includes a confirmation flag like --confirm or --force, skip the discussion and proceed directly to \"answer\". 3. Keep the \"explanation\" field extremely concise (under 15 words). DO NOT think out loud or explain your internal logic."},
+      {"from": "human", "value": "Drop the hammer on h4 --force"},
+      {"from": "gpt", "value": "{\"state\":\"answer\",\"valid\":1,\"explanation\":\"Applying a block rule to isolate host h4.\",\"tasks\":[{\"order\":1,\"type\":\"BlockHost\",\"parameters\":{\"host_id\":\"h4\"}}]}"}
+    ]
+  },
+  {
+    "conversations": [
+      {"from": "system", "value": "You control a network system. You are a classification task agent. Respond in the specified JSON format. RULES: 1. If a command is potentially disruptive (e.g., Disable, PowerOff, Block, Delete, Drop, Modify, Reroute), your default action is to enter the \"discussion\" state to ask for confirmation. 2. If the user's prompt includes a confirmation flag like --confirm or --force, skip the discussion and proceed directly to \"answer\". 3. Keep the \"explanation\" field extremely concise (under 15 words). DO NOT think out loud or explain your internal logic."},
+      {"from": "human", "value": "What is the memory usage of s3?"},
+      {"from": "gpt", "value": "{\"state\":\"answer\",\"valid\":1,\"explanation\":\"Retrieving memory utilization for s3 via health check.\",\"tasks\":[{\"order\":1,\"type\":\"GetDeviceHealth\",\"parameters\":{\"device_name\":\"s3\"}}]}"}
+    ]
+  },
+  {
+    "conversations": [
+      {"from": "system", "value": "You control a network system. You are a classification task agent. Respond in the specified JSON format. RULES: 1. If a command is potentially disruptive (e.g., Disable, PowerOff, Block, Delete, Drop, Modify, Reroute), your default action is to enter the \"discussion\" state to ask for confirmation. 2. If the user's prompt includes a confirmation flag like --confirm or --force, skip the discussion and proceed directly to \"answer\". 3. Keep the \"explanation\" field extremely concise (under 15 words). DO NOT think out loud or explain your internal logic."},
+      {"from": "human", "value": "List all active flows."},
+      {"from": "gpt", "value": "{\"state\":\"answer\",\"valid\":1,\"explanation\":\"Counting all active flows.\",\"tasks\":[{\"order\":1,\"type\":\"GetActiveFlowCount\",\"parameters\":{}}]}"}
+    ]
+  },
+  {
+    "conversations": [
+      {"from": "system", "value": "You control a network system. You are a classification task agent. Respond in the specified JSON format. RULES: 1. If a command is potentially disruptive (e.g., Disable, PowerOff, Block, Delete, Drop, Modify, Reroute), your default action is to enter the \"discussion\" state to ask for confirmation. 2. If the user's prompt includes a confirmation flag like --confirm or --force, skip the discussion and proceed directly to \"answer\". 3. Keep the \"explanation\" field extremely concise (under 15 words). DO NOT think out loud or explain your internal logic."},
+      {"from": "human", "value": "List all devices on the network."},
+      {"from": "gpt", "value": "{\"state\":\"answer\",\"valid\":1,\"explanation\":\"Retrieving all known hosts.\",\"tasks\":[{\"order\":1,\"type\":\"GetAllHosts\",\"parameters\":{}}]}"}
+    ]
+  },
+  {
+    "conversations": [
+      {"from": "system", "value": "You control a network system. You are a classification task agent. Respond in the specified JSON format. RULES: 1. If a command is potentially disruptive (e.g., Disable, PowerOff, Block, Delete, Drop, Modify, Reroute), your default action is to enter the \"discussion\" state to ask for confirmation. 2. If the user's prompt includes a confirmation flag like --confirm or --force, skip the discussion and proceed directly to \"answer\". 3. Keep the \"explanation\" field extremely concise (under 15 words). DO NOT think out loud or explain your internal logic."},
+      {"from": "human", "value": "Change the port status to DOWN."},
+      {"from": "gpt", "value": "{\"state\":\"discussion\",\"prompt\":\"Please provide the device name and the port ID you wish to disable.\"}"}
+    ]
+  },
+  {
+    "conversations": [
+      {"from": "system", "value": "You control a network system. You are a classification task agent. Respond in the specified JSON format. RULES: 1. If a command is potentially disruptive (e.g., Disable, PowerOff, Block, Delete, Drop, Modify, Reroute), your default action is to enter the \"discussion\" state to ask for confirmation. 2. If the user's prompt includes a confirmation flag like --confirm or --force, skip the discussion and proceed directly to \"answer\". 3. Keep the \"explanation\" field extremely concise (under 15 words). DO NOT think out loud or explain your internal logic."},
+      {"from": "human", "value": "Clear device logs."},
+      {"from": "gpt", "value": "{\"state\":\"discussion\",\"prompt\":\"Please specify which device's logs you want to clear. Also confirm as this is disruptive.\"}"}
+    ]
+  },
+  {
+    "conversations": [
+      {"from": "system", "value": "You control a network system. You are a classification task agent. Respond in the specified JSON format. RULES: 1. If a command is potentially disruptive (e.g., Disable, PowerOff, Block, Delete, Drop, Modify, Reroute), your default action is to enter the \"discussion\" state to ask for confirmation. 2. If the user's prompt includes a confirmation flag like --confirm or --force, skip the discussion and proceed directly to \"answer\". 3. Keep the \"explanation\" field extremely concise (under 15 words). DO NOT think out loud or explain your internal logic."},
+      {"from": "human", "value": "Add a load balancing group to s3."},
+      {"from": "gpt", "value": "{\"state\":\"answer\",\"valid\":1,\"explanation\":\"Installing group table entry on s3.\",\"tasks\":[{\"order\":1,\"type\":\"InstallGroupEntry\",\"parameters\":{\"device_name\":\"s3\",\"group_type\":\"select\",\"group_id\":1,\"buckets\":[{\"actions\":[]}]}}]}"}
+    ]
+  },
+  {
+    "conversations": [
+      {"from": "system", "value": "You control a network system. You are a classification task agent. Respond in the specified JSON format. RULES: 1. If a command is potentially disruptive (e.g., Disable, PowerOff, Block, Delete, Drop, Modify, Reroute), your default action is to enter the \"discussion\" state to ask for confirmation. 2. If the user's prompt includes a confirmation flag like --confirm or --force, skip the discussion and proceed directly to \"answer\". 3. Keep the \"explanation\" field extremely concise (under 15 words). DO NOT think out loud or explain your internal logic."},
+      {"from": "human", "value": "What is the uptime?"},
+      {"from": "gpt", "value": "{\"state\":\"discussion\",\"prompt\":\"Please specify which device's uptime you want to check.\"}"}
+    ]
+  },
+  {
+    "conversations": [
+      {"from": "system", "value": "You control a network system. You are a classification task agent. Respond in the specified JSON format. RULES: 1. If a command is potentially disruptive (e.g., Disable, PowerOff, Block, Delete, Drop, Modify, Reroute), your default action is to enter the \"discussion\" state to ask for confirmation. 2. If the user's prompt includes a confirmation flag like --confirm or --force, skip the discussion and proceed directly to \"answer\". 3. Keep the \"explanation\" field extremely concise (under 15 words). DO NOT think out loud or explain your internal logic."},
+      {"from": "human", "value": "How long is s1 online?"},
+      {"from": "gpt", "value": "{\"state\":\"answer\",\"valid\":1,\"explanation\":\"Retrieving uptime for s1.\",\"tasks\":[{\"order\":1,\"type\":\"GetDeviceUptime\",\"parameters\":{\"device_name\":\"s1\"}}]}"}
+    ]
+  },
+  {
+    "conversations": [
+      {"from": "system", "value": "You control a network system. You are a classification task agent. Respond in the specified JSON format. RULES: 1. If a command is potentially disruptive (e.g., Disable, PowerOff, Block, Delete, Drop, Modify, Reroute), your default action is to enter the \"discussion\" state to ask for confirmation. 2. If the user's prompt includes a confirmation flag like --confirm or --force, skip the discussion and proceed directly to \"answer\". 3. Keep the \"explanation\" field extremely concise (under 15 words). DO NOT think out loud or explain your internal logic."},
+      {"from": "human", "value": "Edit rule on s4 to output to port 4."},
+      {"from": "gpt", "value": "{\"state\":\"discussion\",\"prompt\":\"Editing a rule will change routing paths. Confirm?\"}"}
+    ]
+  },
+  {
+    "conversations": [
+      {"from": "system", "value": "You control a network system. You are a classification task agent. Respond in the specified JSON format. RULES: 1. If a command is potentially disruptive (e.g., Disable, PowerOff, Block, Delete, Drop, Modify, Reroute), your default action is to enter the \"discussion\" state to ask for confirmation. 2. If the user's prompt includes a confirmation flag like --confirm or --force, skip the discussion and proceed directly to \"answer\". 3. Keep the \"explanation\" field extremely concise (under 15 words). DO NOT think out loud or explain your internal logic."},
+      {"from": "human", "value": "Change flow on s3 to port 3."},
+      {"from": "gpt", "value": "{\"state\":\"discussion\",\"prompt\":\"Changing the flow destination alters network routing. Do you wish to continue?\"}"}
+    ]
+  },
+  {
+    "conversations": [
+      {"from": "system", "value": "You control a network system. You are a classification task agent. Respond in the specified JSON format. RULES: 1. If a command is potentially disruptive (e.g., Disable, PowerOff, Block, Delete, Drop, Modify, Reroute), your default action is to enter the \"discussion\" state to ask for confirmation. 2. If the user's prompt includes a confirmation flag like --confirm or --force, skip the discussion and proceed directly to \"answer\". 3. Keep the \"explanation\" field extremely concise (under 15 words). DO NOT think out loud or explain your internal logic."},
+      {"from": "human", "value": "Install a flow to drop packets from 10.0.0.1 on s2."},
+      {"from": "gpt", "value": "{\"state\":\"discussion\",\"prompt\":\"Installing a drop rule will block traffic from 10.0.0.1. Confirm?\"}"}
+    ]
+  },
+  {
+    "conversations": [
+      {"from": "system", "value": "You control a network system. You are a classification task agent. Respond in the specified JSON format. RULES: 1. If a command is potentially disruptive (e.g., Disable, PowerOff, Block, Delete, Drop, Modify, Reroute), your default action is to enter the \"discussion\" state to ask for confirmation. 2. If the user's prompt includes a confirmation flag like --confirm or --force, skip the discussion and proceed directly to \"answer\". 3. Keep the \"explanation\" field extremely concise (under 15 words). DO NOT think out loud or explain your internal logic."},
+      {"from": "human", "value": "Set port to UP."},
+      {"from": "gpt", "value": "{\"state\":\"discussion\",\"prompt\":\"Please specify both the device name and the port ID you wish to enable.\"}"}
+    ]
+  }
+]

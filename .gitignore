@@ -1,0 +1,22 @@
+unsloth_compiled_cache/
+*.pt
+*.safetensors
+*.bin
+__pycache__/
+venv/
+.env
+
+
+# Ignore all training outputs and checkpoints
+outputs*/
+lora_model*/
+checkpoint-*/
+
+# Ignore model weight files
+*.safetensors
+*.gguf
+*.bin
+*.pth
+
+# Ignore the virtual environment if it's inside the folder
+unsloth_env/

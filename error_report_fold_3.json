@@ -1,0 +1,156 @@
+[
+  {
+    "input": "Switch temperature status.",
+    "reason": "State mismatch (Expected: answer, Actual: discussion)",
+    "expected": {
+      "state": "answer",
+      "valid": 1,
+      "explanation": "Retrieving temperature for all switches.",
+      "tasks": [
+        {
+          "order": 1,
+          "type": "GetSwitchTemperature",
+          "parameters": {}
+        }
+      ]
+    },
+    "actual_parsed": {
+      "state": "discussion",
+      "prompt": "Please specify which switch you want to check the temperature for."
+    }
+  },
+  {
+    "input": "Turn off historical logging.",
+    "reason": "State mismatch (Expected: answer, Actual: discussion)",
+    "expected": {
+      "state": "answer",
+      "valid": 1,
+      "explanation": "Disabling system-wide historical logging.",
+      "tasks": [
+        {
+          "order": 1,
+          "type": "ToggleHistoricalLogging",
+          "parameters": {
+            "state": "OFF"
+          }
+        }
+      ]
+    },
+    "actual_parsed": {
+      "state": "discussion",
+      "prompt": "Turning off historical logging is a permanent change. Are you sure?"
+    }
+  },
+  {
+    "input": "Who's eating all the bandwidth? Give me the top 5 hogs.",
+    "reason": "Task type mismatch",
+    "expected": {
+      "state": "answer",
+      "valid": 1,
+      "explanation": "Identifying top 5 users consuming the most bandwidth.",
+      "tasks": [
+        {
+          "order": 1,
+          "type": "GetTopKBandwidthUsers",
+          "parameters": {
+            "k": 5
+          }
+        }
+      ]
+    },
+    "actual_parsed": {
+      "state": "answer",
+      "valid": 1,
+      "explanation": "Identifying top 5 bandwidth-consuming hosts.",
+      "tasks": [
+        {
+          "order": 1,
+          "type": "GetTopKBandwidthHosts",
+          "parameters": {
+            "k": 5
+          }
+        }
+      ]
+    }
+  },
+  {
+    "input": "Enable s1 and s2.",
+    "reason": "Failed to parse into a valid JSON format",
+    "expected": {
+      "state": "answer",
+      "valid": 1,
+      "explanation": "Administratively enabling multiple switches.",
+      "tasks": [
+        {
+          "order": 1,
+          "type": "EnableSwitch",
+          "parameters": {
+            "device_name": "s1"
+          }
+        },
+        {
+          "order": 2,
+          "type": "EnableSwitch",
+          "parameters": {
+            "device_name": "s2"
+          }
+        }
+      ]
+    },
+    "actual_parsed": null
+  },
+  {
+    "input": "What is the memory usage of s3?",
+    "reason": "Task type mismatch",
+    "expected": {
+      "state": "answer",
+      "valid": 1,
+      "explanation": "Retrieving memory utilization for s3 via health check.",
+      "tasks": [
+        {
+          "order": 1,
+          "type": "GetDeviceHealth",
+          "parameters": {
+            "device_name": "s3"
+          }
+        }
+      ]
+    },
+    "actual_parsed": {
+      "state": "answer",
+      "valid": 1,
+      "explanation": "Retrieving memory utilization for s3.",
+      "tasks": [
+        {
+          "order": 1,
+          "type": "GetDeviceMemoryUtilization",
+          "parameters": {
+            "device_name": "s3"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "input": "Check the uptime of the switch.",
+    "reason": "State mismatch (Expected: discussion, Actual: answer)",
+    "expected": {
+      "state": "discussion",
+      "prompt": "Please specify which switch's uptime you want to check (e.g., s1, s2)."
+    },
+    "actual_parsed": {
+      "state": "answer",
+      "valid": 1,
+      "explanation": "Checking the uptime of s1.",
+      "tasks": [
+        {
+          "order": 1,
+          "type": "GetDeviceUptime",
+          "parameters": {
+            "device_name": "s1"
+          }
+        }
+      ]
+    }
+  }
+]

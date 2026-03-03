@@ -1,0 +1,233 @@
+[
+  {
+    "id": 24,
+    "input": "List all active hosts.",
+    "reason": "Task 類型不符 (預期: GetAllHosts, 實際: GetActiveHosts)",
+    "expected": {
+      "state": "answer",
+      "valid": 1,
+      "explanation": "Retrieving list of all known hosts.",
+      "tasks": [
+        {
+          "order": 1,
+          "type": "GetAllHosts",
+          "parameters": {}
+        }
+      ]
+    },
+    "actual_raw": "{\"state\":\"answer\",\"valid\":1,\"explanation\":\"Retrieving list of active hosts.\",\"tasks\":[{\"order\":1,\"type\":\"GetActiveHosts\",\"parameters\":{}}]}",
+    "actual_parsed": {
+      "state": "answer",
+      "valid": 1,
+      "explanation": "Retrieving list of active hosts.",
+      "tasks": [
+        {
+          "order": 1,
+          "type": "GetActiveHosts",
+          "parameters": {}
+        }
+      ]
+    }
+  },
+  {
+    "id": 55,
+    "input": "Turn off switch s3 --force.",
+    "reason": "Task 類型不符 (預期: PowerOffSwitch, 實際: SetSwitchPowerState)",
+    "expected": {
+      "state": "answer",
+      "valid": 1,
+      "explanation": "The user explicitly used the --force flag to turn off switch s3, bypassing confirmation.",
+      "tasks": [
+        {
+          "order": 1,
+          "type": "PowerOffSwitch",
+          "parameters": {
+            "device_name": "s3"
+          }
+        }
+      ]
+    },
+    "actual_raw": "{\"state\":\"answer\",\"valid\":1,\"explanation\":\"Powering off switch s3.\",\"tasks\":[{\"order\":1,\"type\":\"SetSwitchPowerState\",\"parameters\":{\"device_name\":\"s3\",\"state\":\"OFF\"}}]}",
+    "actual_parsed": {
+      "state": "answer",
+      "valid": 1,
+      "explanation": "Powering off switch s3.",
+      "tasks": [
+        {
+          "order": 1,
+          "type": "SetSwitchPowerState",
+          "parameters": {
+            "device_name": "s3",
+            "state": "OFF"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": 63,
+    "input": "Reroute HTTP traffic to s3.",
+    "reason": "State 不符 (預期: discussion, 實際: answer)",
+    "expected": {
+      "state": "discussion",
+      "prompt": "Manually rerouting flows can disrupt current sessions. Are you sure you want to reroute this traffic?"
+    },
+    "actual_raw": "{\"state\":\"answer\",\"valid\":1,\"explanation\":\"Rerouting specific traffic to s3.\",\"tasks\":[{\"order\":1,\"type\":\"RerouteTraffic\",\"parameters\":{\"match\":{\"ports\":[\"80\"],\"protocols\":[\"TCP\"]},\"new_path\":[\"s3\"]}}]}",
+    "actual_parsed": {
+      "state": "answer",
+      "valid": 1,
+      "explanation": "Rerouting specific traffic to s3.",
+      "tasks": [
+        {
+          "order": 1,
+          "type": "RerouteTraffic",
+          "parameters": {
+            "match": {
+              "ports": [
+                "80"
+              ],
+              "protocols": [
+                "TCP"
+              ]
+            },
+            "new_path": [
+              "s3"
+            ]
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": 79,
+    "input": "Show me the status of all ports on s3.",
+    "reason": "Task 類型不符 (預期: GetSwitchPorts, 實際: GetPortStatus)",
+    "expected": {
+      "state": "answer",
+      "valid": 1,
+      "explanation": "The user requested a list of all ports and their status on switch s3.",
+      "tasks": [
+        {
+          "order": 1,
+          "type": "GetSwitchPorts",
+          "parameters": {
+            "device_name": "s3"
+          }
+        }
+      ]
+    },
+    "actual_raw": "{\"state\":\"answer\",\"valid\":1,\"explanation\":\"Retrieving port status for s3.\",\"tasks\":[{\"order\":1,\"type\":\"GetPortStatus\",\"parameters\":{\"device_name\":\"s3\"}}]}",
+    "actual_parsed": {
+      "state": "answer",
+      "valid": 1,
+      "explanation": "Retrieving port status for s3.",
+      "tasks": [
+        {
+          "order": 1,
+          "type": "GetPortStatus",
+          "parameters": {
+            "device_name": "s3"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": 90,
+    "input": "Turn on s5.",
+    "reason": "State 不符 (預期: answer, 實際: discussion)",
+    "expected": {
+      "state": "answer",
+      "valid": 1,
+      "explanation": "Turning on a switch is a safe operation that restores or expands connectivity.",
+      "tasks": [
+        {
+          "order": 1,
+          "type": "PowerOnSwitch",
+          "parameters": {
+            "device_name": "s5"
+          }
+        }
+      ]
+    },
+    "actual_raw": "{\"state\":\"discussion\",\"prompt\":\"Powering on s5. Confirm?\"}",
+    "actual_parsed": {
+      "state": "discussion",
+      "prompt": "Powering on s5. Confirm?"
+    }
+  },
+  {
+    "id": 93,
+    "input": "Rename s1 to CoreSwitch.",
+    "reason": "Task 類型不符 (預期: SetDeviceNickname, 實際: RenameDevice)",
+    "expected": {
+      "state": "answer",
+      "valid": 1,
+      "explanation": "Setting a device nickname is non-disruptive and helps with management.",
+      "tasks": [
+        {
+          "order": 1,
+          "type": "SetDeviceNickname",
+          "parameters": {
+            "device_name": "s1",
+            "nickname": "CoreSwitch"
+          }
+        }
+      ]
+    },
+    "actual_raw": "{\"state\":\"answer\",\"valid\":1,\"explanation\":\"Updating device name.\",\"tasks\":[{\"order\":1,\"type\":\"RenameDevice\",\"parameters\":{\"device_name\":\"s1\",\"new_name\":\"CoreSwitch\"}}]}",
+    "actual_parsed": {
+      "state": "answer",
+      "valid": 1,
+      "explanation": "Updating device name.",
+      "tasks": [
+        {
+          "order": 1,
+          "type": "RenameDevice",
+          "parameters": {
+            "device_name": "s1",
+            "new_name": "CoreSwitch"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": 96,
+    "input": "Please install an OpenFlow group entry on s2 for load balancing.",
+    "reason": "Task 類型不符 (預期: InstallGroupEntry, 實際: RequestUIForm)",
+    "expected": {
+      "state": "answer",
+      "valid": 1,
+      "explanation": "The user requested to install a group entry, which is safe to process if the structure is provided.",
+      "tasks": [
+        {
+          "order": 1,
+          "type": "InstallGroupEntry",
+          "parameters": {
+            "device_name": "s2",
+            "group_type": "",
+            "group_id": 0,
+            "buckets": []
+          }
+        }
+      ]
+    },
+    "actual_raw": "{\"state\":\"answer\",\"valid\":1,\"explanation\":\"Opening UI to configure group entries on s2.\",\"tasks\":[{\"order\":1,\"type\":\"RequestUIForm\",\"parameters\":{\"device_name\":\"s2\",\"form_type\":\"install_group\"}}]}",
+    "actual_parsed": {
+      "state": "answer",
+      "valid": 1,
+      "explanation": "Opening UI to configure group entries on s2.",
+      "tasks": [
+        {
+          "order": 1,
+          "type": "RequestUIForm",
+          "parameters": {
+            "device_name": "s2",
+            "form_type": "install_group"
+          }
+        }
+      ]
+    }
+  }
+]
