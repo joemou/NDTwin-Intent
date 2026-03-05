@@ -1,0 +1,335 @@
+[
+  {
+    "input": "What is the total power usage?",
+    "reason": "State mismatch (Expected: answer, Actual: discussion)",
+    "expected": {
+      "state": "answer",
+      "valid": 1,
+      "explanation": "Calculating total network power consumption.",
+      "tasks": [
+        {
+          "order": 1,
+          "type": "GetTotalPowerConsumption",
+          "parameters": {}
+        }
+      ]
+    },
+    "actual_parsed": {
+      "state": "discussion",
+      "prompt": "Please specify the switch list to calculate the total power consumption."
+    }
+  },
+  {
+    "input": "Packet loss between s1 and s3.",
+    "reason": "State mismatch (Expected: answer, Actual: discussion)",
+    "expected": {
+      "state": "answer",
+      "valid": 1,
+      "explanation": "Measuring packet loss rate between s1 and s3.",
+      "tasks": [
+        {
+          "order": 1,
+          "type": "GetPacketLossRate",
+          "parameters": {
+            "src": "s1",
+            "dst": "s3"
+          }
+        }
+      ]
+    },
+    "actual_parsed": {
+      "state": "discussion",
+      "prompt": "Please specify the time window and the devices involved to help me measure packet loss."
+    }
+  },
+  {
+    "input": "Check the plumbing from h1 to h4.",
+    "reason": "Failed to parse into a valid JSON format",
+    "expected": {
+      "state": "answer",
+      "valid": 1,
+      "explanation": "Tracing the network path from h1 to h4.",
+      "tasks": [
+        {
+          "order": 1,
+          "type": "GetPath",
+          "parameters": {
+            "src": "h1",
+            "dst": "h4"
+          }
+        }
+      ]
+    },
+    "actual_parsed": null
+  },
+  {
+    "input": "Spit out the topology map.",
+    "reason": "Task type mismatch",
+    "expected": {
+      "state": "answer",
+      "valid": 1,
+      "explanation": "Fetching the entire network topology structure.",
+      "tasks": [
+        {
+          "order": 1,
+          "type": "GetNetworkTopology",
+          "parameters": {}
+        }
+      ]
+    },
+    "actual_parsed": {
+      "state": "answer",
+      "valid": 1,
+      "explanation": "The user requested a topology map, which is a read-only operation.",
+      "tasks": [
+        {
+          "order": 1,
+          "type": "GetTopology",
+          "parameters": {}
+        }
+      ]
+    }
+  },
+  {
+    "input": "Tell me a joke about routers.",
+    "reason": "State mismatch (Expected: answer, Actual: discussion)",
+    "expected": {
+      "state": "answer",
+      "valid": 0,
+      "explanation": "Invalid command. I am a strict classification agent designed for network tasks, not for conversational humor."
+    },
+    "actual_parsed": {
+      "state": "discussion",
+      "prompt": "Routers are a bit of a 'dead' topic for jokes. Do you want to hear a technical pun or skip it?"
+    }
+  },
+  {
+    "input": "DROP DATABASE network_db;",
+    "reason": "State mismatch (Expected: answer, Actual: discussion)",
+    "expected": {
+      "state": "answer",
+      "valid": 0,
+      "explanation": "SQL injection or database deletion commands are invalid in this network management API context."
+    },
+    "actual_parsed": {
+      "state": "discussion",
+      "prompt": "Dropping the database is a disruptive action. Are you absolutely sure?"
+    }
+  },
+  {
+    "input": "Drop a block rule on h2 pronto --force",
+    "reason": "Task type mismatch",
+    "expected": {
+      "state": "answer",
+      "valid": 1,
+      "explanation": "Instantly applying a rule to block host h2.",
+      "tasks": [
+        {
+          "order": 1,
+          "type": "BlockHost",
+          "parameters": {
+            "host_id": "h2"
+          }
+        }
+      ]
+    },
+    "actual_parsed": {
+      "state": "answer",
+      "valid": 1,
+      "explanation": "Installing a drop rule for h2.",
+      "tasks": [
+        {
+          "order": 1,
+          "type": "InstallFlowEntry",
+          "parameters": {
+            "priority": 100,
+            "match": {
+              "src_ip": "h2"
+            },
+            "actions": []
+          }
+        }
+      ]
+    }
+  },
+  {
+    "input": "Drop a block rule on h2 pronto --force",
+    "reason": "Task type mismatch",
+    "expected": {
+      "state": "answer",
+      "valid": 1,
+      "explanation": "Instantly applying a rule to block host h2.",
+      "tasks": [
+        {
+          "order": 1,
+          "type": "BlockHost",
+          "parameters": {
+            "host_id": "h2"
+          }
+        }
+      ]
+    },
+    "actual_parsed": {
+      "state": "answer",
+      "valid": 1,
+      "explanation": "Installing a drop rule for h2.",
+      "tasks": [
+        {
+          "order": 1,
+          "type": "InstallFlowEntry",
+          "parameters": {
+            "priority": 100,
+            "match": {
+              "src_ip": "h2"
+            },
+            "actions": []
+          }
+        }
+      ]
+    }
+  },
+  {
+    "input": "Check the plumbing from h1 to h4.",
+    "reason": "State mismatch (Expected: answer, Actual: discussion)",
+    "expected": {
+      "state": "answer",
+      "valid": 1,
+      "explanation": "Tracing the network path from h1 to h4.",
+      "tasks": [
+        {
+          "order": 1,
+          "type": "GetPath",
+          "parameters": {
+            "src": "h1",
+            "dst": "h4"
+          }
+        }
+      ]
+    },
+    "actual_parsed": {
+      "state": "discussion",
+      "prompt": "Please specify the type of check (e.g., bandwidth, latency, packet loss) and provide the source and destination hosts (h1 and h4). This will help me narrow down the query."
+    }
+  },
+  {
+    "input": "What is the memory usage of s3?",
+    "reason": "Task type mismatch",
+    "expected": {
+      "state": "answer",
+      "valid": 1,
+      "explanation": "Retrieving memory utilization for s3 via health check.",
+      "tasks": [
+        {
+          "order": 1,
+          "type": "GetDeviceHealth",
+          "parameters": {
+            "device_name": "s3"
+          }
+        }
+      ]
+    },
+    "actual_parsed": {
+      "state": "answer",
+      "valid": 1,
+      "explanation": "Retrieving memory utilization for s3.",
+      "tasks": [
+        {
+          "order": 1,
+          "type": "GetDeviceMemoryUtilization",
+          "parameters": {
+            "device_name": "s3"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "input": "Block traffic on s3 --force",
+    "reason": "Task type mismatch",
+    "expected": {
+      "state": "answer",
+      "valid": 1,
+      "explanation": "Applying drop flow on s3.",
+      "tasks": [
+        {
+          "order": 1,
+          "type": "InstallFlowEntry",
+          "parameters": {
+            "device_name": "s3",
+            "priority": 100,
+            "match": {},
+            "actions": []
+          }
+        }
+      ]
+    },
+    "actual_parsed": {
+      "state": "answer",
+      "valid": 1,
+      "explanation": "Applying block rule on s3.",
+      "tasks": [
+        {
+          "order": 1,
+          "type": "BlockTraffic",
+          "parameters": {
+            "device_name": "s3"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "input": "Install a new flow entry on s5.",
+    "reason": "State mismatch (Expected: answer, Actual: discussion)",
+    "expected": {
+      "state": "answer",
+      "valid": 1,
+      "explanation": "Installing flow entry on s5.",
+      "tasks": [
+        {
+          "order": 1,
+          "type": "InstallFlowEntry",
+          "parameters": {
+            "device_name": "s5",
+            "priority": 100,
+            "match": {},
+            "actions": [
+              {
+                "type": "OUTPUT",
+                "port": 1
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "actual_parsed": {
+      "state": "discussion",
+      "prompt": "Installing a new flow entry may overwrite or disrupt current traffic. Please provide the details (priority, match, actions)."
+    }
+  },
+  {
+    "input": "Show real-time traffic between s2 and s4.",
+    "reason": "Valid flag mismatch",
+    "expected": {
+      "state": "answer",
+      "valid": 0,
+      "explanation": "Missing port ID and duration parameters for real-time traffic monitoring."
+    },
+    "actual_parsed": {
+      "state": "answer",
+      "valid": 1,
+      "explanation": "The user wants to see the real-time traffic between s2 and s4.",
+      "tasks": [
+        {
+          "order": 1,
+          "type": "GetRealTimeTraffic",
+          "parameters": {
+            "src": "s2",
+            "dst": "s4"
+          }
+        }
+      ]
+    }
+  }
+]

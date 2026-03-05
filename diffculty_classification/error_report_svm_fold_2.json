@@ -1,0 +1,30 @@
+[
+  {
+    "input_text": "Can you find a way to bypass switch s4 entirely without causing congestion on s5?",
+    "expected_label": 1,
+    "actual_predicted": 0,
+    "confidence_score": 0.5673,
+    "reason": "SVM classified into wrong category"
+  },
+  {
+    "input_text": "Redistribute the flows on s5 to resolve the current queuing delay.",
+    "expected_label": 1,
+    "actual_predicted": 0,
+    "confidence_score": 0.6183,
+    "reason": "SVM classified into wrong category"
+  },
+  {
+    "input_text": "Troubleshoot link s1-s2.",
+    "expected_label": 1,
+    "actual_predicted": 0,
+    "confidence_score": 0.5865,
+    "reason": "SVM classified into wrong category"
+  },
+  {
+    "input_text": "Bypass the broken switch.",
+    "expected_label": 1,
+    "actual_predicted": 0,
+    "confidence_score": 0.5842,
+    "reason": "SVM classified into wrong category"
+  }
+]

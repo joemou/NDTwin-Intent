@@ -1,0 +1,30 @@
+[
+  {
+    "input_text": "Scan the flow table entries on s2 for any unauthorized routing rules and delete them.",
+    "expected_label": 1,
+    "actual_predicted": 0,
+    "confidence_score": 0.5577,
+    "reason": "SVM classified into wrong category"
+  },
+  {
+    "input_text": "Determine if the recent firmware update on core-switch-01 caused the current flow entry mismatches.",
+    "expected_label": 1,
+    "actual_predicted": 0,
+    "confidence_score": 0.5911,
+    "reason": "SVM classified into wrong category"
+  },
+  {
+    "input_text": "Check if deleting flow entry 45 on s1 will disconnect any active SSH sessions.",
+    "expected_label": 1,
+    "actual_predicted": 0,
+    "confidence_score": 0.5368,
+    "reason": "SVM classified into wrong category"
+  },
+  {
+    "input_text": "Save switch power today.",
+    "expected_label": 1,
+    "actual_predicted": 0,
+    "confidence_score": 0.7206,
+    "reason": "SVM classified into wrong category"
+  }
+]

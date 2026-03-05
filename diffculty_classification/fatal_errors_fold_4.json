@@ -1,0 +1,16 @@
+[
+  {
+    "input_text": "Evaluate the impact of shutting down port 5 on switch s4 before actually doing it.",
+    "expected_label": 1,
+    "actual_predicted": 0,
+    "confidence_score": 0.8895,
+    "reason": "High confidence but wrong prediction (Fatal Error)"
+  },
+  {
+    "input_text": "I want to reboot switch s2; please verify if doing so will isolate any critical servers.",
+    "expected_label": 1,
+    "actual_predicted": 0,
+    "confidence_score": 0.878,
+    "reason": "High confidence but wrong prediction (Fatal Error)"
+  }
+]

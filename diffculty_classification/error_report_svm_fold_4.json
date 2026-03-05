@@ -1,0 +1,23 @@
+[
+  {
+    "input_text": "Just reroute the traffic to the backup link now.",
+    "expected_label": 0,
+    "actual_predicted": 1,
+    "confidence_score": 0.6931,
+    "reason": "SVM classified into wrong category"
+  },
+  {
+    "input_text": "Find out why the CPU utilization on switch s2 keeps spiking to 100% every five minutes.",
+    "expected_label": 1,
+    "actual_predicted": 0,
+    "confidence_score": 0.5515,
+    "reason": "SVM classified into wrong category"
+  },
+  {
+    "input_text": "Reroute around s2.",
+    "expected_label": 1,
+    "actual_predicted": 0,
+    "confidence_score": 0.5241,
+    "reason": "SVM classified into wrong category"
+  }
+]

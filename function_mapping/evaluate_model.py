@@ -6,7 +6,7 @@ from unsloth import FastLanguageModel
 # ==========================================
 # 1. 設定區
 # ==========================================
-MODEL_PATH = "lora_model"          # 你的微調模型路徑
+MODEL_PATH = "lora_model_fold_1"          # 你的微調模型路徑
 TEST_DATA_PATH = "test.json" # 先前產生的 50 筆測試資料檔案
 ERROR_REPORT_PATH = "error_report.json" # 驗證錯誤的詳細報告輸出位置
 

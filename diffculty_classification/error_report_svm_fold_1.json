@@ -1,0 +1,37 @@
+[
+  {
+    "input_text": "Please check the CPU utilization of switch s4 right now.",
+    "expected_label": 0,
+    "actual_predicted": 1,
+    "confidence_score": 0.6299,
+    "reason": "SVM classified into wrong category"
+  },
+  {
+    "input_text": "Check the connectivity between h2 and h4.",
+    "expected_label": 0,
+    "actual_predicted": 1,
+    "confidence_score": 0.7713,
+    "reason": "SVM classified into wrong category"
+  },
+  {
+    "input_text": "Evaluate the impact of shutting down port 5 on switch s4 before actually doing it.",
+    "expected_label": 1,
+    "actual_predicted": 0,
+    "confidence_score": 0.7494,
+    "reason": "SVM classified into wrong category"
+  },
+  {
+    "input_text": "Predict the network congestion if we add 10Gbps of new video traffic from h1 to h3.",
+    "expected_label": 1,
+    "actual_predicted": 0,
+    "confidence_score": 0.5937,
+    "reason": "SVM classified into wrong category"
+  },
+  {
+    "input_text": "Auto-heal link s1-s3.",
+    "expected_label": 1,
+    "actual_predicted": 0,
+    "confidence_score": 0.5332,
+    "reason": "SVM classified into wrong category"
+  }
+]

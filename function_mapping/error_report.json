@@ -1,0 +1,64 @@
+[
+  {
+    "id": 33,
+    "input": "Show real-time traffic between s1 and s3.",
+    "reason": "Valid 標記不符 (預期: 0, 實際: 1)",
+    "expected": {
+      "state": "answer",
+      "valid": 0,
+      "explanation": "Missing port ID and duration parameters for real-time traffic monitoring."
+    },
+    "actual_raw": "{\"state\":\"answer\",\"valid\":1,\"explanation\":\"The user wants to monitor real-time traffic between s1 and s3.\",\"tasks\":[{\"order\":1,\"type\":\"GetRealTimeTraffic\",\"parameters\":{\"src\":\"s1\",\"dst\":\"s3\"}}]}",
+    "actual_parsed": {
+      "state": "answer",
+      "valid": 1,
+      "explanation": "The user wants to monitor real-time traffic between s1 and s3.",
+      "tasks": [
+        {
+          "order": 1,
+          "type": "GetRealTimeTraffic",
+          "parameters": {
+            "src": "s1",
+            "dst": "s3"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": 48,
+    "input": "Show the latest logs from firewall f1.",
+    "reason": "Task 類型不符 (預期: GetDeviceLogs, 實際: GetDeviceRecentLogs)",
+    "expected": {
+      "state": "answer",
+      "valid": 1,
+      "explanation": "Retrieving system logs.",
+      "tasks": [
+        {
+          "order": 1,
+          "type": "GetDeviceLogs",
+          "parameters": {
+            "device_name": "f1",
+            "line_count": 100
+          }
+        }
+      ]
+    },
+    "actual_raw": "{\"state\":\"answer\",\"valid\":1,\"explanation\":\"Retrieving recent logs from device f1.\",\"tasks\":[{\"order\":1,\"type\":\"GetDeviceRecentLogs\",\"parameters\":{\"device_name\":\"f1\",\"line_count\":20}}]}",
+    "actual_parsed": {
+      "state": "answer",
+      "valid": 1,
+      "explanation": "Retrieving recent logs from device f1.",
+      "tasks": [
+        {
+          "order": 1,
+          "type": "GetDeviceRecentLogs",
+          "parameters": {
+            "device_name": "f1",
+            "line_count": 20
+          }
+        }
+      ]
+    }
+  }
+]
