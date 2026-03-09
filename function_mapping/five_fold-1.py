@@ -1,4 +1,5 @@
 import json
+import time
 import torch
 import gc
 from tqdm import tqdm
@@ -13,12 +14,24 @@ from transformers import TrainingArguments
 # 0. Global Configurations
 # ==========================================
 ALL_DATA_PATH = "all_data.json" # 包含擴充資料的訓練/交叉驗證集
-TEST_DATA_PATH = "test.json"    # ★ 你的獨立 50 題乾淨測試集
+EASY_TEST_DATA_PATH = "easytest.json"    # ★ 你的獨立 50 題乾淨測試集
+HARD_TEST_DATA_PATH = "hardtest.json"
 MODEL_NAME = "unsloth/Meta-Llama-3.1-8B-Instruct-bnb-4bit"
 MAX_SEQ_LENGTH = 4096
 
+# Key Changes to Increase Difficulty:
+# Metaphorical Language: Used terms like "spiderweb" for topology, "cognitive load" for CPU, "brain" for processors, and "tsunami" for traffic spikes.
+
+# Jargon substitution: Replaced "reboot" with "hard bounce," "soft cycle," or "warm cycle." Replaced "block" with "blackhole" or "administrative blackout."
+
+# Removal of Key Verbs: Instead of "Show me," I used "Audit," "Tally," "Snapshot," or "Quantify."
+
+# Implicit Parameters: Instead of saying "List flow entries," I used "Dump the contents of the forwarding database."
+
+# Role-Based Descriptions: Instead of "Turn on switch s4," I used "Bring s4 back from the dead."
+
 # ★ 已替換為強化版 System Prompt，杜絕 API 幻覺與過度謹慎
-SYSTEM_PROMPT = """You control a network system. You are a classification task agent. Respond in the specified JSON format. RULES: 1. If a command is potentially disruptive (e.g., Disable, PowerOff, Block, Delete, Drop, Modify, Reroute), your default action is to enter the \"discussion\" state to ask for confirmation. 2. If the user's prompt includes a confirmation flag like --confirm or --force, skip the discussion and proceed directly to \"answer\". 3. Keep the \"explanation\" field extremely concise (under 15 words). DO NOT think out loud or explain your internal logic."""
+SYSTEM_PROMPT = """You control a network system. You are a classification task agent. Respond in the specified JSON format. \nRULES: \n1. DISRUPTIVE ACTIONS: If a command is explicitly disruptive (e.g., Disable, PowerOff, Block, Delete, Drop, Modify, Reroute, Update Firmware), enter the \"discussion\" state. NOTE: \"Install\", \"Create\", and \"Add\" are NOT disruptive, proceed to \"answer\" directly.\n2. CONFIRMATION FLAG: If the prompt includes --confirm or --force, skip discussion and proceed to \"answer\". \n3. MISSING PARAMS (STRICT): \"real-time traffic\" queries MUST have port and duration parameters. If missing, you MUST set \"valid\": 0 and explain: \"Missing port ID and duration parameters for real-time traffic monitoring.\"\n4. ALLOWED API LIST & DEFAULTS: You must map intents strictly to these Task types: \n  - Packet loss queries -> GetPacketLossRate\n   - Log queries -> GetDeviceLogs (Always use line_count: 100 unless specified)\n   DO NOT invent new task types like \"GetRealTimeTraffic\" or \"GetDeviceRecentLogs\".\n5. Keep the \"explanation\" under 15 words. DO NOT explain your internal logic."""
 
 # ==========================================
 # 1. Helper Functions (JSON Extraction & Comparison)
@@ -136,18 +149,28 @@ def train_fold(train_data_list, fold_idx):
 # ==========================================
 # ★ 新增 dataset_name 參數，用來區分報表名稱
 def evaluate_fold(model, tokenizer, test_data_list, fold_idx, dataset_name):
-    print(f"\n[Fold {fold_idx}] Starting inference and validation on [{dataset_name}] ({len(test_data_list)} samples)...")
+    print(f"\n[Fold {fold_idx}] Starting inference on [{dataset_name}]...")
     FastLanguageModel.for_inference(model)
     
     correct_count = 0
     failed_reports = []
+    
+    # --- 新增：計時統計變數 ---
+    total_inference_time = 0.0
+    total_chars_generated = 0
+    num_samples = len(test_data_list)
+    # -----------------------
 
-    for idx, item in enumerate(tqdm(test_data_list, desc=f"Evaluating Fold {fold_idx} ({dataset_name})")):
+    for idx, item in enumerate(tqdm(test_data_list, desc=f"Evaluating {dataset_name}")):
         conversations = item.get("conversations", [])
         human_input = next(c["value"] for c in conversations if c["from"] == "human")
         expected_str = next(c["value"] for c in conversations if c["from"] == "gpt")
-        expected_json = json.loads(expected_str)
         
+        try:
+            expected_json = json.loads(expected_str)
+        except json.JSONDecodeError:
+            raise
+
         messages = [
             {"from": "system", "value": SYSTEM_PROMPT},
             {"from": "human", "value": human_input}
@@ -156,16 +179,31 @@ def evaluate_fold(model, tokenizer, test_data_list, fold_idx, dataset_name):
         inputs = tokenizer.apply_chat_template(
             messages, tokenize=True, add_generation_prompt=True, return_tensors="pt"
         ).to("cuda")
-
         input_length = inputs.shape[1]
+
+        # --- 開始計時 ---
+        start_time = time.time()
+        
         outputs = model.generate(
-            inputs, max_new_tokens=512, use_cache=True, temperature=0.1, pad_token_id=tokenizer.eos_token_id
+            inputs, 
+            max_new_tokens=512, 
+            use_cache=True, 
+            temperature=0.1, 
+            pad_token_id=tokenizer.eos_token_id
         )
         
-        response_str = tokenizer.decode(outputs[0][input_length:], skip_special_tokens=True).strip()
-        actual_json = extract_json(response_str)
+        # --- 結束計時 ---
+        end_time = time.time()
         
+        duration = end_time - start_time
+        total_inference_time += duration
+        
+        response_str = tokenizer.decode(outputs[0][input_length:], skip_special_tokens=True).strip()
+        total_chars_generated += len(response_str)
+        
+        actual_json = extract_json(response_str)
         is_correct, reason = compare_outputs(expected_json, actual_json)
+        
         if is_correct:
             correct_count += 1
         else:
@@ -176,15 +214,28 @@ def evaluate_fold(model, tokenizer, test_data_list, fold_idx, dataset_name):
                 "actual_parsed": actual_json
             })
             
-    accuracy = correct_count / len(test_data_list)
-    print(f"[Fold {fold_idx} - {dataset_name}] Accuracy: {accuracy*100:.1f}% ({correct_count}/{len(test_data_list)})")
+    # --- 計算統計數據 ---
+    accuracy = correct_count / num_samples
+    avg_latency = total_inference_time / num_samples
+    chars_per_sec = total_chars_generated / total_inference_time if total_inference_time > 0 else 0
+    
+    print(f"\n--- {dataset_name} Performance Report ---")
+    print(f"Accuracy      : {accuracy*100:.1f}%")
+    print(f"Total Time    : {total_inference_time:.2f} seconds")
+    print(f"Avg Latency   : {avg_latency:.4f} seconds/sample")
+    print(f"Throughput    : {chars_per_sec:.2f} chars/sec")
+    print(f"----------------------------------------\n")
     
     if failed_reports:
-        # ★ 錯誤報告檔名加上 dataset_name 避免覆蓋
         with open(f"error_report_fold_{fold_idx}_{dataset_name}.json", 'w', encoding='utf-8') as f:
             json.dump(failed_reports, f, indent=2, ensure_ascii=False)
             
-    return accuracy
+    # 回傳時可以多包裝一些資訊，方便 main 彙整
+    return {
+        "accuracy": accuracy,
+        "avg_latency": avg_latency,
+        "total_time": total_inference_time
+    }
 
 # ==========================================
 # 4. Main Program: 5-Fold Cross-Validation Pipeline
@@ -194,14 +245,20 @@ def main():
     with open(ALL_DATA_PATH, 'r', encoding='utf-8') as f:
         all_data = json.load(f)
         
-    print(f"Loading TEST_DATA from: {TEST_DATA_PATH}")
-    with open(TEST_DATA_PATH, 'r', encoding='utf-8') as f:
+    print(f"Loading TEST_DATA from: {EASY_TEST_DATA_PATH}")
+    with open(EASY_TEST_DATA_PATH, 'r', encoding='utf-8') as f:
         external_test_data = json.load(f)
+
+    # ★ 新增：讀取 Hard Test Data
+    print(f"Loading HARD_TEST_DATA from: {HARD_TEST_DATA_PATH}")
+    with open(HARD_TEST_DATA_PATH, 'r', encoding='utf-8') as f:
+        hard_test_data = json.load(f)
         
     kf = KFold(n_splits=5, shuffle=True, random_state=42)
     
     cv_accuracies = []       # 紀錄每一折自己的 Test 準確率
     external_accuracies = [] # 紀錄每一折對外部 test.json 的準確率
+    hard_accuracies = []     # ★ 新增：紀錄每一折對 hard test 的準確率
 
     for fold, (train_idx, test_idx) in enumerate(kf.split(all_data), start=1):
         print("\n" + "="*50)
@@ -211,18 +268,23 @@ def main():
         train_data = [all_data[i] for i in train_idx]
         cv_test_data = [all_data[i] for i in test_idx]
         
-        print(f"Train size: {len(train_data)}, CV Test size: {len(cv_test_data)}, External Test size: {len(external_test_data)}")
+        # ★ 更新 print 資訊，加入 Hard Test size
+        print(f"Train size: {len(train_data)}, CV Test size: {len(cv_test_data)}, External Test size: {len(external_test_data)}, Hard Test size: {len(hard_test_data)}")
         
         # 1. 訓練
         model, tokenizer, trainer = train_fold(train_data, fold)
         
-        # 2. 評估: Fold 內部的測試集
-        cv_acc = evaluate_fold(model, tokenizer, cv_test_data, fold, dataset_name="CV_Test")
-        cv_accuracies.append(cv_acc)
+        # 2. 評估: Fold 內部的測試集 (★ 修正原代碼 bug: 提取回傳 dict 中的 'accuracy')
+        cv_res = evaluate_fold(model, tokenizer, cv_test_data, fold, dataset_name="CV_Test")
+        cv_accuracies.append(cv_res["accuracy"]) 
         
         # 3. 評估: 外部獨立的 test.json
-        ext_acc = evaluate_fold(model, tokenizer, external_test_data, fold, dataset_name="External_Test")
-        external_accuracies.append(ext_acc)
+        ext_res = evaluate_fold(model, tokenizer, external_test_data, fold, dataset_name="External_Test")
+        external_accuracies.append(ext_res["accuracy"]) 
+        
+        # ★ 新增 3.5. 評估: 外部困難的 hardtest.json
+        hard_res = evaluate_fold(model, tokenizer, hard_test_data, fold, dataset_name="Hard_Test")
+        hard_accuracies.append(hard_res["accuracy"])
         
         # 4. 釋放記憶體
         print(f"[Fold {fold}] Clearing VRAM memory...")
@@ -232,20 +294,26 @@ def main():
         gc.collect()
         torch.cuda.empty_cache()
 
-    # 輸出最終雙料報表
+    # 輸出最終三料報表
     print("\n" + "="*50)
-    print("📊 5-Fold Cross-Validation & External Test Final Report")
+    print("📊 5-Fold Cross-Validation & External Tests Final Report")
     print("="*50)
     
-    print("【Cross-Validation Test Results】 (模型泛化能力測試)")
+    print("【Cross-Validation Test Results】 ")
     for i, acc in enumerate(cv_accuracies, start=1):
         print(f"  Fold {i} Accuracy : {acc*100:.2f}%")
     print(f"  🏆 CV Average Accuracy: {sum(cv_accuracies) / len(cv_accuracies)*100:.2f}%\n")
     
-    print("【External 'test.json' Results】 (零資料洩漏極限測試)")
+    print("【External 'easytest.json' Results】 ")
     for i, acc in enumerate(external_accuracies, start=1):
         print(f"  Fold {i} Accuracy : {acc*100:.2f}%")
-    print(f"  🏆 External Average Accuracy: {sum(external_accuracies) / len(external_accuracies)*100:.2f}%")
+    print(f"  🏆 External Average Accuracy: {sum(external_accuracies) / len(external_accuracies)*100:.2f}%\n")
+
+    # ★ 新增：輸出 Hard Test 報表
+    print("【External 'hardtest.json' Results】 ")
+    for i, acc in enumerate(hard_accuracies, start=1):
+        print(f"  Fold {i} Accuracy : {acc*100:.2f}%")
+    print(f"  🏆 Hard Test Average Accuracy: {sum(hard_accuracies) / len(hard_accuracies)*100:.2f}%")
     print("="*50)
 
 if __name__ == "__main__":

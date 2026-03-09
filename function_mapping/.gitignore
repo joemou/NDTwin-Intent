@@ -11,6 +11,7 @@ venv/
 outputs*/
 lora_model*/
 checkpoint-*/
+error-*/
 
 # Ignore model weight files
 *.safetensors

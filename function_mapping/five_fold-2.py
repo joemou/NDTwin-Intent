@@ -10,22 +10,22 @@ from trl import SFTTrainer
 from transformers import TrainingArguments
 
 # 👉 引入受限解碼所需的套件
-from typing import List, Optional, Literal, Dict
-from pydantic import BaseModel
+from typing import List, Optional, Literal, Dict, Union
+from pydantic import BaseModel, Field, RootModel
 from lmformatenforcer import JsonSchemaParser
 from lmformatenforcer.integrations.transformers import build_transformers_prefix_allowed_tokens_fn
 
 # ==========================================
 # 0. 全局設定
 # ==========================================
-ALL_DATA_PATH = "all_data.json" # ★ 請將所有資料合併放在這個檔案
+ALL_DATA_PATH = "all_data.json" # ★ 請確認這裡面的解答都符合新 Schema
 MODEL_NAME = "unsloth/Meta-Llama-3.1-8B-Instruct-bnb-4bit"
 MAX_SEQ_LENGTH = 4096
 
-SYSTEM_PROMPT = """You control a network system. You are a classification task agent. Respond in the specified JSON format. RULES: 1. If a command is potentially disruptive (e.g., Disable, PowerOff, Block, Delete, Drop, Modify, Reroute), your default action is to enter the \"discussion\" state to ask for confirmation. 2. If the user's prompt includes a confirmation flag like --confirm or --force, skip the discussion and proceed directly to \"answer\". 3. Keep the \"explanation\" field extremely concise (under 15 words). DO NOT think out loud or explain your internal logic."""
+SYSTEM_PROMPT = """You control a network system. You are a classification task agent. Respond in the specified JSON format. \nRULES: \n1. DISRUPTIVE ACTIONS: If a command is explicitly disruptive (e.g., Disable, PowerOff, Block, Delete, Drop, Modify, Reroute, Update Firmware), enter the \"discussion\" state. NOTE: \"Install\", \"Create\", and \"Add\" are NOT disruptive, proceed to \"answer\" directly.\n2. CONFIRMATION FLAG: If the prompt includes --confirm or --force, skip discussion and proceed to \"answer\". \n3. MISSING PARAMS (STRICT): \"real-time traffic\" queries MUST have port and duration parameters. If missing, you MUST set \"valid\": 0 and explain: \"Missing port ID and duration parameters for real-time traffic monitoring.\"\n4. ALLOWED API LIST & DEFAULTS: You must map intents strictly to these Task types: \n  - Packet loss queries -> GetPacketLossRate\n   - Log queries -> GetDeviceLogs (Always use line_count: 100 unless specified)\n   DO NOT invent new task types like \"GetRealTimeTraffic\" or \"GetDeviceRecentLogs\".\n5. Keep the \"explanation\" under 15 words. DO NOT explain your internal logic."""
 
 # ==========================================
-# 1. 嚴格定義 JSON 格式與合法的 Task 名稱 (Pydantic)
+# 1. 嚴格定義 JSON 格式與合法的 Task 名稱 (Pydantic Polymorphism)
 # ==========================================
 class ActionSchema(BaseModel):
     type: Optional[str] = None
@@ -83,16 +83,30 @@ class TaskSchema(BaseModel):
         "GetDeviceUptime", "RestartDevice", "BackupConfiguration", "RestoreConfiguration", 
         "PingHost", "TracerouteHost", "GetArpTable", "GetMacTable", "SetPortStatus", 
         "GetPortStatistics", "GetDeviceLogs", "ClearDeviceLogs", "UpdateDeviceFirmware", 
-        "GetDeviceHealth", "MonitorRealTimeTraffic", "RequestUIForm"
+        "GetDeviceHealth"
     ]
     parameters: ParametersSchema
 
-class ResponseSchema(BaseModel):
-    state: Literal["answer", "discussion"]
-    prompt: Optional[str] = None
-    valid: Optional[int] = None
-    explanation: Optional[str] = None
-    tasks: Optional[List[TaskSchema]] = None
+# 🚀 殺招：拆分三種絕對互斥的情境，並避開 lmformatenforcer 處理 Literal Int 的崩潰 Bug
+class DiscussionResponse(BaseModel):
+    state: Literal["discussion"]
+    prompt: str = Field(..., description="Ask the user for confirmation.")
+
+class InvalidAnswerResponse(BaseModel):
+    state: Literal["answer"]
+    valid: int = Field(0, description="Must be 0 to indicate missing params.") # 🛠️ 避開 Bug 的關鍵：改用 int 與 Field(0)
+    explanation: str = Field(..., description="Explain why it failed (e.g., missing params).")
+    # 這裡刻意不放 tasks，斷絕它生成 API 的可能
+
+class ValidAnswerResponse(BaseModel):
+    state: Literal["answer"]
+    valid: int = Field(1, description="Must be 1 to indicate valid tasks.")    # 🛠️ 避開 Bug 的關鍵：改用 int 與 Field(1)
+    explanation: str
+    tasks: List[TaskSchema] = Field(..., min_length=1) # 強制不准為空！不准提早結束！
+
+# 🚀 使用 RootModel 將三者聯集，狀態機會自動根據前面的生成決定後面的路徑
+class ResponseSchema(RootModel):
+    root: Union[DiscussionResponse, InvalidAnswerResponse, ValidAnswerResponse]
 
 # ==========================================
 # 2. 輔助函數 (擷取 JSON 與比對)
@@ -168,7 +182,6 @@ def train_fold(train_data_list, fold_idx):
         texts = [tokenizer.apply_chat_template(convo, tokenize=False, add_generation_prompt=False) for convo in convos]
         return { "text" : texts }
 
-    # 將 List 轉為 HuggingFace Dataset
     hf_dataset = Dataset.from_list(train_data_list)
     hf_dataset = hf_dataset.map(formatting_prompts_func, batched = True)
 
@@ -185,7 +198,7 @@ def train_fold(train_data_list, fold_idx):
             per_device_train_batch_size = 2, 
             gradient_accumulation_steps = 8,
             warmup_steps = 10,
-            num_train_epochs = 4, # 配合 550 筆資料，100 steps 大約是 3 個 Epochs
+            num_train_epochs = 4, 
             learning_rate = 3e-4,
             fp16 = not torch.cuda.is_bf16_supported(),
             bf16 = torch.cuda.is_bf16_supported(),
@@ -199,11 +212,6 @@ def train_fold(train_data_list, fold_idx):
     )
     
     trainer.train()
-    
-    # 儲存每個 fold 的模型 (可選)
-    model.save_pretrained(f"lora_model_fold_{fold_idx}")
-    tokenizer.save_pretrained(f"lora_model_fold_{fold_idx}")
-    
     return model, tokenizer, trainer
 
 # ==========================================
@@ -213,7 +221,6 @@ def evaluate_fold(model, tokenizer, test_data_list, fold_idx):
     print(f"\n[Fold {fold_idx}] 開始推論與驗證 ({len(test_data_list)} 筆測試資料)...")
     FastLanguageModel.for_inference(model)
     
-    # 🚀 建立受限解碼的約束器
     print(f"[Fold {fold_idx}] Building JSON Schema Parser for constrained decoding...")
     schema_dict = ResponseSchema.model_json_schema()
     parser = JsonSchemaParser(schema_dict)
@@ -228,7 +235,6 @@ def evaluate_fold(model, tokenizer, test_data_list, fold_idx):
         expected_str = next(c["value"] for c in conversations if c["from"] == "gpt")
         expected_json = json.loads(expected_str)
         
-        # 準備輸入
         messages = [
             {"from": "system", "value": SYSTEM_PROMPT},
             {"from": "human", "value": human_input}
@@ -238,7 +244,6 @@ def evaluate_fold(model, tokenizer, test_data_list, fold_idx):
             messages, tokenize=True, add_generation_prompt=True, return_tensors="pt"
         ).to("cuda")
 
-        # 推論 (掛載約束器)
         input_length = inputs.shape[1]
         outputs = model.generate(
             inputs, 
@@ -246,13 +251,12 @@ def evaluate_fold(model, tokenizer, test_data_list, fold_idx):
             use_cache=True, 
             temperature=0.1, 
             pad_token_id=tokenizer.eos_token_id,
-            prefix_allowed_tokens_fn=prefix_function # 🎯 強制約束輸出！
+            prefix_allowed_tokens_fn=prefix_function
         )
         
         response_str = tokenizer.decode(outputs[0][input_length:], skip_special_tokens=True).strip()
         actual_json = extract_json(response_str)
         
-        # 比對
         is_correct, reason = compare_outputs(expected_json, actual_json)
         if is_correct:
             correct_count += 1
@@ -281,9 +285,7 @@ def main():
     with open(ALL_DATA_PATH, 'r', encoding='utf-8') as f:
         all_data = json.load(f)
         
-    # 設定 5-Fold 切分
     kf = KFold(n_splits=5, shuffle=True, random_state=42)
-    
     fold_accuracies = []
 
     for fold, (train_idx, test_idx) in enumerate(kf.split(all_data), start=1):
@@ -291,20 +293,13 @@ def main():
         print(f"🚀 開始執行 Fold {fold}/5")
         print("="*50)
         
-        # 切分資料
         train_data = [all_data[i] for i in train_idx]
         test_data = [all_data[i] for i in test_idx]
         
-        print(f"Train size: {len(train_data)}, Test size: {len(test_data)}")
-        
-        # 1. 訓練
         model, tokenizer, trainer = train_fold(train_data, fold)
-        
-        # 2. 測試
         acc = evaluate_fold(model, tokenizer, test_data, fold)
         fold_accuracies.append(acc)
         
-        # 3. 釋放記憶體 (非常重要，否則跑到第二三個 fold 會 OOM)
         print(f"[Fold {fold}] 清理 VRAM 記憶體...")
         del model
         del tokenizer
@@ -312,7 +307,6 @@ def main():
         gc.collect()
         torch.cuda.empty_cache()
 
-    # 輸出最終報告
     print("\n" + "="*50)
     print("📊 5-Fold Cross-Validation 最終報告 (Constrained Decoding Enabled)")
     print("="*50)

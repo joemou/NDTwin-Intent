@@ -1,0 +1,4 @@
+GetDeviceHealth
+GetSwitchMemoryUtilization
+GetSwitchTemperature
+
