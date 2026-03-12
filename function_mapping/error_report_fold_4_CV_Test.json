@@ -1,0 +1,487 @@
+[
+  {
+    "input": "Toggle historical logging on.",
+    "reason": "State mismatch (Expected: answer, Actual: discussion)",
+    "expected": {
+      "state": "answer",
+      "valid": 1,
+      "explanation": "Enabling system-wide historical logging.",
+      "tasks": [
+        {
+          "order": 1,
+          "type": "ToggleHistoricalLogging",
+          "parameters": {
+            "state": "ON"
+          }
+        }
+      ]
+    },
+    "actual_parsed": {
+      "state": "discussion",
+      "prompt": "Toggling historical logging on will start storing device metrics. Confirm?"
+    }
+  },
+  {
+    "input": "What is the bandwidth from s78 to s287 on port eth3 for 60 seconds?",
+    "reason": "Task type mismatch",
+    "expected": {
+      "state": "answer",
+      "valid": 1,
+      "explanation": "Retrieving bandwidth usage successfully.",
+      "tasks": [
+        {
+          "order": 1,
+          "type": "GetALinkBandwidthUtilization",
+          "parameters": {
+            "src": "s78",
+            "dst": "s287",
+            "port": "eth3",
+            "duration": "60s"
+          }
+        }
+      ]
+    },
+    "actual_parsed": {
+      "state": "answer",
+      "valid": 1,
+      "explanation": "Retrieving bandwidth usage successfully.",
+      "tasks": [
+        {
+          "order": 1,
+          "type": "GetALinkBandwidth",
+          "parameters": {
+            "src": "s78",
+            "dst": "s287",
+            "port": "eth3",
+            "duration": "60s"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "input": "List all active flows.",
+    "reason": "Task type mismatch",
+    "expected": {
+      "state": "answer",
+      "valid": 1,
+      "explanation": "Counting all active flows.",
+      "tasks": [
+        {
+          "order": 1,
+          "type": "GetActiveFlowCount",
+          "parameters": {}
+        }
+      ]
+    },
+    "actual_parsed": {
+      "state": "answer",
+      "valid": 1,
+      "explanation": "Retrieving all active flow entries.",
+      "tasks": [
+        {
+          "order": 1,
+          "type": "GetActiveFlowEntries",
+          "parameters": {}
+        }
+      ]
+    }
+  },
+  {
+    "input": "Limit rate on s1.",
+    "reason": "State mismatch (Expected: answer, Actual: discussion)",
+    "expected": {
+      "state": "answer",
+      "valid": 1,
+      "explanation": "Installing meter on s1.",
+      "tasks": [
+        {
+          "order": 1,
+          "type": "InstallMeterEntry",
+          "parameters": {
+            "device_name": "s1",
+            "meter_id": 1,
+            "flags": [
+              "KBPS"
+            ],
+            "bands": [
+              {
+                "type": "DROP",
+                "rate": 1000
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "actual_parsed": {
+      "state": "discussion",
+      "prompt": "Please specify the rate limit and the duration. This will help me create a more accurate rule."
+    }
+  },
+  {
+    "input": "Enable logging.",
+    "reason": "Task type mismatch",
+    "expected": {
+      "state": "answer",
+      "valid": 1,
+      "explanation": "Enabling system-wide historical logging.",
+      "tasks": [
+        {
+          "order": 1,
+          "type": "ToggleHistoricalLogging",
+          "parameters": {
+            "state": "ON"
+          }
+        }
+      ]
+    },
+    "actual_parsed": {
+      "state": "answer",
+      "valid": 1,
+      "explanation": "Enabling system-wide logging.",
+      "tasks": [
+        {
+          "order": 1,
+          "type": "ToggleSwitchLogging",
+          "parameters": {
+            "state": "ON"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "input": "Enable logging.",
+    "reason": "Task type mismatch",
+    "expected": {
+      "state": "answer",
+      "valid": 1,
+      "explanation": "Enabling system-wide historical logging.",
+      "tasks": [
+        {
+          "order": 1,
+          "type": "ToggleHistoricalLogging",
+          "parameters": {
+            "state": "ON"
+          }
+        }
+      ]
+    },
+    "actual_parsed": {
+      "state": "answer",
+      "valid": 1,
+      "explanation": "Enabling system-wide logging.",
+      "tasks": [
+        {
+          "order": 1,
+          "type": "ToggleSwitchLogging",
+          "parameters": {
+            "state": "ON"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "input": "Enable logging.",
+    "reason": "Task type mismatch",
+    "expected": {
+      "state": "answer",
+      "valid": 1,
+      "explanation": "Enabling system-wide historical logging.",
+      "tasks": [
+        {
+          "order": 1,
+          "type": "ToggleHistoricalLogging",
+          "parameters": {
+            "state": "ON"
+          }
+        }
+      ]
+    },
+    "actual_parsed": {
+      "state": "answer",
+      "valid": 1,
+      "explanation": "Enabling system-wide logging.",
+      "tasks": [
+        {
+          "order": 1,
+          "type": "ToggleSwitchLogging",
+          "parameters": {
+            "state": "ON"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "input": "Block traffic on s3 --force",
+    "reason": "Task type mismatch",
+    "expected": {
+      "state": "answer",
+      "valid": 1,
+      "explanation": "Applying drop flow on s3.",
+      "tasks": [
+        {
+          "order": 1,
+          "type": "InstallFlowEntry",
+          "parameters": {
+            "device_name": "s3",
+            "priority": 100,
+            "match": {},
+            "actions": []
+          }
+        }
+      ]
+    },
+    "actual_parsed": {
+      "state": "answer",
+      "valid": 1,
+      "explanation": "Applying a block rule to isolate s3.",
+      "tasks": [
+        {
+          "order": 1,
+          "type": "BlockHost",
+          "parameters": {
+            "host_id": "s3"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "input": "Set power state to ON.",
+    "reason": "State mismatch (Expected: discussion, Actual: answer)",
+    "expected": {
+      "state": "discussion",
+      "prompt": "Please specify which switch you want to power on."
+    },
+    "actual_parsed": {
+      "state": "answer",
+      "valid": 1,
+      "explanation": "Powering on switch s1.",
+      "tasks": [
+        {
+          "order": 1,
+          "type": "PowerOnSwitch",
+          "parameters": {
+            "device_name": "s1"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "input": "Limit rate on s1.",
+    "reason": "State mismatch (Expected: discussion, Actual: answer)",
+    "expected": {
+      "state": "discussion",
+      "prompt": "Please specify the rate limit and the duration. This will help me create a more accurate rule."
+    },
+    "actual_parsed": {
+      "state": "answer",
+      "valid": 1,
+      "explanation": "Installing meter on s1.",
+      "tasks": [
+        {
+          "order": 1,
+          "type": "InstallMeterEntry",
+          "parameters": {
+            "device_name": "s1",
+            "meter_id": 1,
+            "flags": [
+              "KBPS"
+            ],
+            "bands": [
+              {
+                "type": "DROP",
+                "rate": 1000
+              }
+            ]
+          }
+        }
+      ]
+    }
+  },
+  {
+    "input": "List all active flows.",
+    "reason": "Task type mismatch",
+    "expected": {
+      "state": "answer",
+      "valid": 1,
+      "explanation": "Counting all active flows.",
+      "tasks": [
+        {
+          "order": 1,
+          "type": "GetActiveFlowCount",
+          "parameters": {}
+        }
+      ]
+    },
+    "actual_parsed": {
+      "state": "answer",
+      "valid": 1,
+      "explanation": "Retrieving all active flow entries.",
+      "tasks": [
+        {
+          "order": 1,
+          "type": "GetActiveFlowEntries",
+          "parameters": {}
+        }
+      ]
+    }
+  },
+  {
+    "input": "Check the plumbing from h1 to h4.",
+    "reason": "Task type mismatch",
+    "expected": {
+      "state": "answer",
+      "valid": 1,
+      "explanation": "Tracing the network path from h1 to h4.",
+      "tasks": [
+        {
+          "order": 1,
+          "type": "GetPath",
+          "parameters": {
+            "src": "h1",
+            "dst": "h4"
+          }
+        }
+      ]
+    },
+    "actual_parsed": {
+      "state": "answer",
+      "valid": 1,
+      "explanation": "Tracing the network path from h1 to h4.",
+      "tasks": [
+        {
+          "order": 1,
+          "type": "TracerouteHost",
+          "parameters": {
+            "host": "h4",
+            "source": "h1"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "input": "Block traffic on s3 --force",
+    "reason": "Task type mismatch",
+    "expected": {
+      "state": "answer",
+      "valid": 1,
+      "explanation": "Applying drop flow on s3.",
+      "tasks": [
+        {
+          "order": 1,
+          "type": "InstallFlowEntry",
+          "parameters": {
+            "device_name": "s3",
+            "priority": 100,
+            "match": {},
+            "actions": []
+          }
+        }
+      ]
+    },
+    "actual_parsed": {
+      "state": "answer",
+      "valid": 1,
+      "explanation": "Applying a block rule to isolate s3.",
+      "tasks": [
+        {
+          "order": 1,
+          "type": "BlockHost",
+          "parameters": {
+            "host_id": "s3"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "input": "Write a bash script to reboot all switches.",
+    "reason": "State mismatch (Expected: answer, Actual: discussion)",
+    "expected": {
+      "state": "answer",
+      "valid": 0,
+      "explanation": "Invalid command. I cannot write or execute arbitrary scripts. I only process specific network APIs."
+    },
+    "actual_parsed": {
+      "state": "discussion",
+      "prompt": "Rebooting all switches will cause network downtime. Do you want to proceed?"
+    }
+  },
+  {
+    "input": "Check the uptime of the switch.",
+    "reason": "State mismatch (Expected: discussion, Actual: answer)",
+    "expected": {
+      "state": "discussion",
+      "prompt": "Please specify which switch's uptime you want to check (e.g., s1, s2)."
+    },
+    "actual_parsed": {
+      "state": "answer",
+      "valid": 1,
+      "explanation": "Checking how long s1 has been running.",
+      "tasks": [
+        {
+          "order": 1,
+          "type": "GetDeviceUptime",
+          "parameters": {
+            "device_name": "s1"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "input": "Drop the packets on s3.",
+    "reason": "State mismatch (Expected: answer, Actual: discussion)",
+    "expected": {
+      "state": "answer",
+      "valid": 1,
+      "explanation": "Installing drop flow on s3.",
+      "tasks": [
+        {
+          "order": 1,
+          "type": "InstallFlowEntry",
+          "parameters": {
+            "device_name": "s3",
+            "priority": 100,
+            "match": {},
+            "actions": []
+          }
+        }
+      ]
+    },
+    "actual_parsed": {
+      "state": "discussion",
+      "prompt": "Dropping packets on s3 will disrupt network traffic. Are you sure?"
+    }
+  },
+  {
+    "input": "Clear all the rules on s2.",
+    "reason": "State mismatch (Expected: answer, Actual: discussion)",
+    "expected": {
+      "state": "answer",
+      "valid": 1,
+      "explanation": "Removing all flows from s2.",
+      "tasks": [
+        {
+          "order": 1,
+          "type": "DeleteFlowEntry",
+          "parameters": {
+            "device_name": "s2",
+            "match": {}
+          }
+        }
+      ]
+    },
+    "actual_parsed": {
+      "state": "discussion",
+      "prompt": "Clearing all rules on s2 will completely disable its routing capabilities. Are you sure?"
+    }
+  }
+]

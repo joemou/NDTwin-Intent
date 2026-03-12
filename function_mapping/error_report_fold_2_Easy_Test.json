@@ -1,0 +1,36 @@
+[
+  {
+    "input": "Show me the network topology.",
+    "reason": "Task type mismatch",
+    "expected": {
+      "state": "answer",
+      "valid": 1,
+      "explanation": "Retrieving network topology.",
+      "tasks": [
+        {
+          "order": 1,
+          "type": "GetNetworkTopology",
+          "parameters": {}
+        }
+      ]
+    },
+    "actual_parsed": {
+      "state": "answer",
+      "valid": 1,
+      "explanation": "Executing a traceroute to all hosts to build the topology map.",
+      "tasks": [
+        {
+          "order": 1,
+          "type": "TracerouteHost",
+          "parameters": {
+            "host_ids": [
+              "h1",
+              "h2",
+              "h3"
+            ]
+          }
+        }
+      ]
+    }
+  }
+]

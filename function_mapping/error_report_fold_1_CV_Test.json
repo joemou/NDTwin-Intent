@@ -1,0 +1,210 @@
+[
+  {
+    "input": "Slap a rate limit meter 1 dropping at 1000 on s5.",
+    "reason": "State mismatch (Expected: answer, Actual: discussion)",
+    "expected": {
+      "state": "answer",
+      "valid": 1,
+      "explanation": "Installing a meter entry on s5 to rate limit traffic.",
+      "tasks": [
+        {
+          "order": 1,
+          "type": "InstallMeterEntry",
+          "parameters": {
+            "device_name": "s5",
+            "meter_id": 1,
+            "flags": [
+              "KBPS"
+            ],
+            "bands": [
+              {
+                "type": "DROP",
+                "rate": 1000
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "actual_parsed": {
+      "state": "discussion",
+      "prompt": "Applying a rate limit meter will discard packets above the threshold. Confirm?"
+    }
+  },
+  {
+    "input": "Get the path from h3 to h7.",
+    "reason": "Task type mismatch",
+    "expected": {
+      "state": "answer",
+      "valid": 1,
+      "explanation": "Finding the routing path between h3 and h7.",
+      "tasks": [
+        {
+          "order": 1,
+          "type": "GetPath",
+          "parameters": {
+            "src": "h3",
+            "dst": "h7"
+          }
+        }
+      ]
+    },
+    "actual_parsed": {
+      "state": "answer",
+      "valid": 1,
+      "explanation": "Retrieving path from h3 to h7.",
+      "tasks": [
+        {
+          "order": 1,
+          "type": "GetPathSwitches",
+          "parameters": {
+            "src": "h3",
+            "dst": "h7"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "input": "List all ports status on s3.",
+    "reason": "Task type mismatch",
+    "expected": {
+      "state": "answer",
+      "valid": 1,
+      "explanation": "Retrieving s3 port status list.",
+      "tasks": [
+        {
+          "order": 1,
+          "type": "GetSwitchPorts",
+          "parameters": {
+            "device_name": "s3"
+          }
+        }
+      ]
+    },
+    "actual_parsed": {
+      "state": "answer",
+      "valid": 1,
+      "explanation": "Retrieving port statistics for s3.",
+      "tasks": [
+        {
+          "order": 1,
+          "type": "GetPortStatistics",
+          "parameters": {
+            "device_name": "s3"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "input": "Check the memory utilization.",
+    "reason": "State mismatch (Expected: answer, Actual: discussion)",
+    "expected": {
+      "state": "answer",
+      "valid": 1,
+      "explanation": "Checking memory usage for all active switches.",
+      "tasks": [
+        {
+          "order": 1,
+          "type": "GetSwitchMemoryUtilization",
+          "parameters": {}
+        }
+      ]
+    },
+    "actual_parsed": {
+      "state": "discussion",
+      "prompt": "Please specify which device's memory utilization you want to check."
+    }
+  },
+  {
+    "input": "Edit rule on s4 to output to port 4.",
+    "reason": "State mismatch (Expected: discussion, Actual: answer)",
+    "expected": {
+      "state": "discussion",
+      "prompt": "Editing a rule will change routing paths. Confirm?"
+    },
+    "actual_parsed": {
+      "state": "answer",
+      "valid": 1,
+      "explanation": "Modifying rule on s4.",
+      "tasks": [
+        {
+          "order": 1,
+          "type": "ModifyFlowEntry",
+          "parameters": {
+            "device_name": "s4",
+            "priority": 100,
+            "match": {},
+            "actions": [
+              {
+                "type": "OUTPUT",
+                "port": 4
+              }
+            ]
+          }
+        }
+      ]
+    }
+  },
+  {
+    "input": "Limit rate on s1.",
+    "reason": "State mismatch (Expected: discussion, Actual: answer)",
+    "expected": {
+      "state": "discussion",
+      "prompt": "Please specify the rate limit and the duration. This will help me create a more accurate rule."
+    },
+    "actual_parsed": {
+      "state": "answer",
+      "valid": 1,
+      "explanation": "Installing meter on s1.",
+      "tasks": [
+        {
+          "order": 1,
+          "type": "InstallMeterEntry",
+          "parameters": {
+            "device_name": "s1",
+            "meter_id": 1,
+            "flags": [
+              "KBPS"
+            ],
+            "bands": [
+              {
+                "type": "DROP",
+                "rate": 1000
+              }
+            ]
+          }
+        }
+      ]
+    }
+  },
+  {
+    "input": "Show all active flows.",
+    "reason": "Task type mismatch",
+    "expected": {
+      "state": "answer",
+      "valid": 1,
+      "explanation": "Counting all active flows.",
+      "tasks": [
+        {
+          "order": 1,
+          "type": "GetActiveFlowCount",
+          "parameters": {}
+        }
+      ]
+    },
+    "actual_parsed": {
+      "state": "answer",
+      "valid": 1,
+      "explanation": "Listing all active flows.",
+      "tasks": [
+        {
+          "order": 1,
+          "type": "GetActiveFlowEntryList",
+          "parameters": {}
+        }
+      ]
+    }
+  }
+]

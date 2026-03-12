@@ -1,0 +1,538 @@
+{
+  "easytest.json": [
+    {
+      "input": "Turn on switch s3.",
+      "reason": "Task type mismatch",
+      "expected": {
+        "state": "answer",
+        "valid": 1,
+        "explanation": "Turning on switch s3.",
+        "tasks": [
+          {
+            "order": 1,
+            "type": "PowerOnSwitch",
+            "parameters": {
+              "device_name": "s3"
+            }
+          }
+        ]
+      },
+      "actual": {
+        "state": "answer",
+        "valid": 1,
+        "explanation": "Turning on switch s3.",
+        "tasks": [
+          {
+            "order": 1,
+            "type": "EnableSwitch",
+            "parameters": {
+              "device_name": "s3"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "input": "Create a new group entry on s7.",
+      "reason": "Failed to parse into a valid JSON format",
+      "expected": {
+        "state": "answer",
+        "valid": 1,
+        "explanation": "Creating group entry.",
+        "tasks": [
+          {
+            "order": 1,
+            "type": "InstallGroupEntry",
+            "parameters": {
+              "device_name": "s7",
+              "group_type": "all",
+              "group_id": 1,
+              "buckets": [
+                {
+                  "actions": []
+                }
+              ]
+            }
+          }
+        ]
+      },
+      "actual": null
+    }
+  ],
+  "hardtest.json": [
+    {
+      "input": "What's the bandwidth utilization between core switch s1 and agg switch s2?",
+      "reason": "Valid flag mismatch",
+      "expected": {
+        "state": "answer",
+        "valid": 0,
+        "explanation": "Missing port ID and duration parameters for real-time traffic monitoring."
+      },
+      "actual": {
+        "state": "answer",
+        "valid": 1,
+        "explanation": "Fetching link bandwidth utilization.",
+        "tasks": [
+          {
+            "order": 1,
+            "type": "GetALinkBandwidthUtilization",
+            "parameters": {
+              "src": "s1",
+              "dst": "s2",
+              "port": null,
+              "duration": null
+            }
+          }
+        ]
+      }
+    },
+    {
+      "input": "Show me why the link between s3 and s4 is slow.",
+      "reason": "Task count mismatch",
+      "expected": {
+        "state": "answer",
+        "valid": 1,
+        "explanation": "Retrieving link telemetry.",
+        "tasks": [
+          {
+            "order": 1,
+            "type": "GetLinkLatency",
+            "parameters": {
+              "src": "s3",
+              "dst": "s4"
+            }
+          },
+          {
+            "order": 2,
+            "type": "GetPacketLossRate",
+            "parameters": {
+              "src": "s3",
+              "dst": "s4"
+            }
+          },
+          {
+            "order": 3,
+            "type": "GetTopKCongestedLinks",
+            "parameters": {
+              "k": 3
+            }
+          }
+        ]
+      },
+      "actual": {
+        "state": "answer",
+        "valid": 1,
+        "explanation": "Checking link latency and packet loss rate.",
+        "tasks": [
+          {
+            "order": 1,
+            "type": "GetLinkLatency",
+            "parameters": {
+              "src": "s3",
+              "dst": "s4"
+            }
+          },
+          {
+            "order": 2,
+            "type": "GetPacketLossRate",
+            "parameters": {
+              "src": "s3",
+              "dst": "s4"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "input": "Check health of all switches and show logs of the hottest one.",
+      "reason": "Task count mismatch",
+      "expected": {
+        "state": "answer",
+        "valid": 1,
+        "explanation": "Comparing temperatures and fetching logs.",
+        "tasks": [
+          {
+            "order": 1,
+            "type": "GetSwitchTemperature",
+            "parameters": {}
+          },
+          {
+            "order": 2,
+            "type": "GetDeviceLogs",
+            "parameters": {
+              "device_name": "s1",
+              "line_count": 100
+            }
+          }
+        ]
+      },
+      "actual": {
+        "state": "answer",
+        "valid": 1,
+        "explanation": "Check health and logs of hottest switch.",
+        "tasks": [
+          {
+            "order": 1,
+            "type": "GetSwitchTemperature",
+            "parameters": {}
+          },
+          {
+            "order": 2,
+            "type": "GetDeviceHealth",
+            "parameters": {
+              "device_name": "hottest_switch"
+            }
+          },
+          {
+            "order": 3,
+            "type": "GetDeviceLogs",
+            "parameters": {
+              "device_name": "hottest_switch",
+              "line_count": 100
+            }
+          }
+        ]
+      }
+    },
+    {
+      "input": "Is there any packet loss on the path between h1 and h8?",
+      "reason": "Task count mismatch",
+      "expected": {
+        "state": "answer",
+        "valid": 1,
+        "explanation": "Analyzing path packet loss.",
+        "tasks": [
+          {
+            "order": 1,
+            "type": "GetPath",
+            "parameters": {
+              "src": "h1",
+              "dst": "h8"
+            }
+          },
+          {
+            "order": 2,
+            "type": "GetPacketLossRate",
+            "parameters": {
+              "src": "s1",
+              "dst": "s5"
+            }
+          }
+        ]
+      },
+      "actual": {
+        "state": "answer",
+        "valid": 1,
+        "explanation": "Checking packet loss between h1 and h8.",
+        "tasks": [
+          {
+            "order": 1,
+            "type": "GetPacketLossRate",
+            "parameters": {
+              "src": "h1",
+              "dst": "h8"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "input": "Which switch has the most flow entries?",
+      "reason": "Task count mismatch",
+      "expected": {
+        "state": "answer",
+        "valid": 1,
+        "explanation": "Retrieving flow counts for all switches.",
+        "tasks": [
+          {
+            "order": 1,
+            "type": "GetFlowEntryCount",
+            "parameters": {
+              "device_name": "all"
+            }
+          }
+        ]
+      },
+      "actual": {
+        "state": "answer",
+        "valid": 1,
+        "explanation": "Retrieve flow entry counts for all switches.",
+        "tasks": [
+          {
+            "order": 1,
+            "type": "GetFlowEntryCount",
+            "parameters": {
+              "device_name": "switch1"
+            }
+          },
+          {
+            "order": 2,
+            "type": "GetFlowEntryCount",
+            "parameters": {
+              "device_name": "switch2"
+            }
+          },
+          {
+            "order": 3,
+            "type": "GetFlowEntryCount",
+            "parameters": {
+              "device_name": "switch3"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "input": "What's the MAC table for the core switch?",
+      "reason": "Device Name parsing error",
+      "expected": {
+        "state": "answer",
+        "valid": 1,
+        "explanation": "Retrieving MAC address table.",
+        "tasks": [
+          {
+            "order": 1,
+            "type": "GetMacTable",
+            "parameters": {
+              "device_name": "s1"
+            }
+          }
+        ]
+      },
+      "actual": {
+        "state": "answer",
+        "valid": 1,
+        "explanation": "Retrieving MAC table for core switch.",
+        "tasks": [
+          {
+            "order": 1,
+            "type": "GetMacTable",
+            "parameters": {
+              "device_name": "core switch"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "input": "Install a multicast group entry on s7 with ID 500.",
+      "reason": "Failed to parse into a valid JSON format",
+      "expected": {
+        "state": "answer",
+        "valid": 1,
+        "explanation": "Installing group entry.",
+        "tasks": [
+          {
+            "order": 1,
+            "type": "InstallGroupEntry",
+            "parameters": {
+              "device_name": "s7",
+              "group_type": "all",
+              "group_id": 500,
+              "buckets": [
+                {
+                  "actions": []
+                }
+              ]
+            }
+          }
+        ]
+      },
+      "actual": null
+    },
+    {
+      "input": "Which link has the highest packet loss?",
+      "reason": "Task type mismatch",
+      "expected": {
+        "state": "answer",
+        "valid": 1,
+        "explanation": "Identifying links with high packet loss.",
+        "tasks": [
+          {
+            "order": 1,
+            "type": "GetPacketLossRate",
+            "parameters": {
+              "src": "all",
+              "dst": "all"
+            }
+          }
+        ]
+      },
+      "actual": {
+        "state": "answer",
+        "valid": 1,
+        "explanation": "Identify the link with the highest packet loss.",
+        "tasks": [
+          {
+            "order": 1,
+            "type": "GetTopKCongestedLinks",
+            "parameters": {
+              "k": 1
+            }
+          }
+        ]
+      }
+    },
+    {
+      "input": "List all active hosts and their port connections.",
+      "reason": "Task count mismatch",
+      "expected": {
+        "state": "answer",
+        "valid": 1,
+        "explanation": "Retrieving host topology mapping.",
+        "tasks": [
+          {
+            "order": 1,
+            "type": "GetAllHosts",
+            "parameters": {}
+          },
+          {
+            "order": 2,
+            "type": "GetNetworkTopology",
+            "parameters": {}
+          }
+        ]
+      },
+      "actual": {
+        "state": "answer",
+        "valid": 1,
+        "explanation": "Listing all active hosts and their connections.",
+        "tasks": [
+          {
+            "order": 1,
+            "type": "GetAllHosts",
+            "parameters": {}
+          }
+        ]
+      }
+    },
+    {
+      "input": "Is h5 still reachable from s4?",
+      "reason": "Task type mismatch",
+      "expected": {
+        "state": "answer",
+        "valid": 1,
+        "explanation": "Testing reachability.",
+        "tasks": [
+          {
+            "order": 1,
+            "type": "PingHost",
+            "parameters": {
+              "host": "h5",
+              "count": 4
+            }
+          }
+        ]
+      },
+      "actual": {
+        "state": "answer",
+        "valid": 1,
+        "explanation": "Checking path from s4 to h5.",
+        "tasks": [
+          {
+            "order": 1,
+            "type": "GetPath",
+            "parameters": {
+              "src": "s4",
+              "dst": "h5"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "input": "Get the temperature of all s-series switches.",
+      "reason": "Task count mismatch",
+      "expected": {
+        "state": "answer",
+        "valid": 1,
+        "explanation": "Retrieving system temperatures.",
+        "tasks": [
+          {
+            "order": 1,
+            "type": "GetSwitchTemperature",
+            "parameters": {}
+          }
+        ]
+      },
+      "actual": {
+        "state": "answer",
+        "valid": 1,
+        "explanation": "Fetching temperature for all s-series switches.",
+        "tasks": [
+          {
+            "order": 1,
+            "type": "GetSwitchTemperature",
+            "parameters": {
+              "device_name": "s-series-switch-1"
+            }
+          },
+          {
+            "order": 2,
+            "type": "GetSwitchTemperature",
+            "parameters": {
+              "device_name": "s-series-switch-2"
+            }
+          },
+          {
+            "order": 3,
+            "type": "GetSwitchTemperature",
+            "parameters": {
+              "device_name": "s-series-switch-3"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "input": "Backup all switch configurations.",
+      "reason": "Task count mismatch",
+      "expected": {
+        "state": "answer",
+        "valid": 1,
+        "explanation": "Executing global configuration backup.",
+        "tasks": [
+          {
+            "order": 1,
+            "type": "BackupConfiguration",
+            "parameters": {
+              "device_name": "all",
+              "backup_path": "/backup/full_backup.bak"
+            }
+          }
+        ]
+      },
+      "actual": {
+        "state": "answer",
+        "valid": 1,
+        "explanation": "Backing up all switch configurations with default paths.",
+        "tasks": [
+          {
+            "order": 1,
+            "type": "BackupConfiguration",
+            "parameters": {
+              "device_name": "switch1",
+              "backup_path": "/backup/switch1_config.bak"
+            }
+          },
+          {
+            "order": 2,
+            "type": "BackupConfiguration",
+            "parameters": {
+              "device_name": "switch2",
+              "backup_path": "/backup/switch2_config.bak"
+            }
+          },
+          {
+            "order": 3,
+            "type": "BackupConfiguration",
+            "parameters": {
+              "device_name": "switch3",
+              "backup_path": "/backup/switch3_config.bak"
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

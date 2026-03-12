@@ -1,0 +1,26 @@
+[
+  {
+    "input": "What is the bandwidth usage from s1 to s2?",
+    "reason": "Valid flag mismatch",
+    "expected": {
+      "state": "answer",
+      "valid": 1,
+      "explanation": "Retrieving link bandwidth usage.",
+      "tasks": [
+        {
+          "order": 1,
+          "type": "GetALinkBandwidthUtilization",
+          "parameters": {
+            "src": "s1",
+            "dst": "s2"
+          }
+        }
+      ]
+    },
+    "actual_parsed": {
+      "state": "answer",
+      "valid": 0,
+      "explanation": "Missing port ID and duration parameters for real-time traffic monitoring."
+    }
+  }
+]

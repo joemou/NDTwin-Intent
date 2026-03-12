@@ -31,7 +31,7 @@ MAX_SEQ_LENGTH = 4096
 # Role-Based Descriptions: Instead of "Turn on switch s4," I used "Bring s4 back from the dead."
 
 # ★ 已替換為強化版 System Prompt，杜絕 API 幻覺與過度謹慎
-SYSTEM_PROMPT = """You control a network system. You are a classification task agent. Respond in the specified JSON format. \nRULES: \n1. DISRUPTIVE ACTIONS: If a command is explicitly disruptive (e.g., Disable, PowerOff, Block, Delete, Drop, Modify, Reroute, Update Firmware), enter the \"discussion\" state. NOTE: \"Install\", \"Create\", and \"Add\" are NOT disruptive, proceed to \"answer\" directly.\n2. CONFIRMATION FLAG: If the prompt includes --confirm or --force, skip discussion and proceed to \"answer\". \n3. MISSING PARAMS (STRICT): \"real-time traffic\" queries MUST have port and duration parameters. If missing, you MUST set \"valid\": 0 and explain: \"Missing port ID and duration parameters for real-time traffic monitoring.\"\n4. ALLOWED API LIST & DEFAULTS: You must map intents strictly to these Task types: \n  - Packet loss queries -> GetPacketLossRate\n   - Log queries -> GetDeviceLogs (Always use line_count: 100 unless specified)\n   DO NOT invent new task types like \"GetRealTimeTraffic\" or \"GetDeviceRecentLogs\".\n5. Keep the \"explanation\" under 15 words. DO NOT explain your internal logic."""
+SYSTEM_PROMPT = """You control a network system. You are a classification task agent. Respond in the specified JSON format. \nRULES: \n1. DISRUPTIVE ACTIONS: If a command is explicitly disruptive (e.g., Disable, PowerOff, Block, Delete, Drop, Modify, Reroute, Update Firmware, Clear, Wipe, Nuke, Reset, Flush), enter the \"discussion\" state. NOTE: \"Install\", \"Create\", and \"Add\" are NOT disruptive, proceed to \"answer\" directly.\n2. CONFIRMATION FLAG: If the prompt includes --confirm or --force, skip discussion and proceed to \"answer\". \n3. MISSING PARAMS (STRICT): \"real-time traffic\" queries MUST have port and duration parameters. If missing, you MUST set \"valid\": 0 and explain: \"Missing port ID and duration parameters for real-time traffic monitoring.\" NOTE: Queries asking for \"top users\", \"top IPs\", or \"most bandwidth\" are global statistics, NOT real-time traffic monitoring, and DO NOT require these parameters.\n4. ALLOWED API LIST & DEFAULTS (STRICT): You are strictly limited to the following EXACT task types. Any deviation is a failure.\n  - Packet loss queries -> GetPacketLossRate\n  - Top bandwidth/IP queries -> GetTopKBandwidthUsers\n  - Log queries -> GetDeviceLogs (CRITICAL: You MUST set the parameter \"line_count\": 100 by default unless explicitly stated. Never default to 50.)\n  - Administrative state changes (e.g., \"enable\", \"disable\", \"bring up\") -> EnableSwitch / DisableSwitch\n  - Hardware power changes (e.g., \"power on\", \"power off\", \"kill power\") -> PowerOnSwitch / PowerOffSwitch\n  - Clear log operations -> ClearDeviceLogs\n5. Keep the \"explanation\" under 15 words. DO NOT explain your internal logic."""
 
 # ==========================================
 # 1. Helper Functions (JSON Extraction & Comparison)
@@ -169,6 +169,7 @@ def evaluate_fold(model, tokenizer, test_data_list, fold_idx, dataset_name):
         try:
             expected_json = json.loads(expected_str)
         except json.JSONDecodeError:
+            print(f"解析失敗的字串內容: {expected_str}")
             raise
 
         messages = [
@@ -279,7 +280,7 @@ def main():
         cv_accuracies.append(cv_res["accuracy"]) 
         
         # 3. 評估: 外部獨立的 test.json
-        ext_res = evaluate_fold(model, tokenizer, external_test_data, fold, dataset_name="External_Test")
+        ext_res = evaluate_fold(model, tokenizer, external_test_data, fold, dataset_name="Easy_Test")
         external_accuracies.append(ext_res["accuracy"]) 
         
         # ★ 新增 3.5. 評估: 外部困難的 hardtest.json

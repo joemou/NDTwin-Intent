@@ -1,0 +1,207 @@
+[
+  {
+    "input": "Find the path from h1 to h3.",
+    "reason": "State mismatch (Expected: answer, Actual: discussion)",
+    "expected": {
+      "state": "answer",
+      "valid": 1,
+      "explanation": "The user wants to compute the network path between source h1 and destination h3.",
+      "tasks": [
+        {
+          "order": 1,
+          "type": "GetPath",
+          "parameters": {
+            "src": "h1",
+            "dst": "h3"
+          }
+        }
+      ]
+    },
+    "actual_parsed": {
+      "state": "discussion",
+      "prompt": "Please provide the source and destination hosts to find the path."
+    }
+  },
+  {
+    "input": "Show me the current network topology.",
+    "reason": "Task type mismatch",
+    "expected": {
+      "state": "answer",
+      "valid": 1,
+      "explanation": "Retrieving the structure of the entire network.",
+      "tasks": [
+        {
+          "order": 1,
+          "type": "GetNetworkTopology",
+          "parameters": {}
+        }
+      ]
+    },
+    "actual_parsed": {
+      "state": "answer",
+      "valid": 1,
+      "explanation": "Executing a traceroute to all hosts to build the topology map.",
+      "tasks": [
+        {
+          "order": 1,
+          "type": "TracerouteHost",
+          "parameters": {
+            "host_ids": [
+              "h1",
+              "h2",
+              "h3"
+            ]
+          }
+        }
+      ]
+    }
+  },
+  {
+    "input": "Enable s1 and s2.",
+    "reason": "Task count mismatch",
+    "expected": {
+      "state": "answer",
+      "valid": 1,
+      "explanation": "Administratively enabling multiple switches.",
+      "tasks": [
+        {
+          "order": 1,
+          "type": "EnableSwitch",
+          "parameters": {
+            "device_name": "s1"
+          }
+        },
+        {
+          "order": 2,
+          "type": "EnableSwitch",
+          "parameters": {
+            "device_name": "s2"
+          }
+        }
+      ]
+    },
+    "actual_parsed": {
+      "state": "answer",
+      "valid": 1,
+      "explanation": "Enabling switches s1 and s2.",
+      "tasks": [
+        {
+          "order": 1,
+          "type": "EnableSwitch",
+          "parameters": {
+            "devices": [
+              "s1",
+              "s2"
+            ]
+          }
+        }
+      ]
+    }
+  },
+  {
+    "input": "Set power state to ON.",
+    "reason": "State mismatch (Expected: discussion, Actual: answer)",
+    "expected": {
+      "state": "discussion",
+      "prompt": "Please specify which switch you want to power on."
+    },
+    "actual_parsed": {
+      "state": "answer",
+      "valid": 1,
+      "explanation": "Powering on switch s1.",
+      "tasks": [
+        {
+          "order": 1,
+          "type": "PowerOnSwitch",
+          "parameters": {
+            "device_name": "s1"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "input": "Enable s1 and s2.",
+    "reason": "Task count mismatch",
+    "expected": {
+      "state": "answer",
+      "valid": 1,
+      "explanation": "Administratively enabling multiple switches.",
+      "tasks": [
+        {
+          "order": 1,
+          "type": "EnableSwitch",
+          "parameters": {
+            "device_name": "s1"
+          }
+        },
+        {
+          "order": 2,
+          "type": "EnableSwitch",
+          "parameters": {
+            "device_name": "s2"
+          }
+        }
+      ]
+    },
+    "actual_parsed": {
+      "state": "answer",
+      "valid": 1,
+      "explanation": "Enabling switches s1 and s2.",
+      "tasks": [
+        {
+          "order": 1,
+          "type": "EnableSwitch",
+          "parameters": {
+            "devices": [
+              "s1",
+              "s2"
+            ]
+          }
+        }
+      ]
+    }
+  },
+  {
+    "input": "Enable s1 and s2.",
+    "reason": "Task count mismatch",
+    "expected": {
+      "state": "answer",
+      "valid": 1,
+      "explanation": "Administratively enabling multiple switches.",
+      "tasks": [
+        {
+          "order": 1,
+          "type": "EnableSwitch",
+          "parameters": {
+            "device_name": "s1"
+          }
+        },
+        {
+          "order": 2,
+          "type": "EnableSwitch",
+          "parameters": {
+            "device_name": "s2"
+          }
+        }
+      ]
+    },
+    "actual_parsed": {
+      "state": "answer",
+      "valid": 1,
+      "explanation": "Enabling switches s1 and s2.",
+      "tasks": [
+        {
+          "order": 1,
+          "type": "EnableSwitch",
+          "parameters": {
+            "devices": [
+              "s1",
+              "s2"
+            ]
+          }
+        }
+      ]
+    }
+  }
+]

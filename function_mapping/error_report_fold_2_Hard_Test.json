@@ -1,0 +1,643 @@
+[
+  {
+    "input": "Inject a new packet-handling logic into s2's forwarding table.",
+    "reason": "Task type mismatch",
+    "expected": {
+      "state": "answer",
+      "valid": 1,
+      "explanation": "Opening the UI form to configure the new flow entry for s2.",
+      "tasks": [
+        {
+          "order": 1,
+          "type": "RequestUIForm",
+          "parameters": {
+            "device_name": "s2",
+            "form_type": "install_flow"
+          }
+        }
+      ]
+    },
+    "actual_parsed": {
+      "state": "answer",
+      "valid": 1,
+      "explanation": "Installing a new flow entry on s2.",
+      "tasks": [
+        {
+          "order": 1,
+          "type": "InstallFlowEntry",
+          "parameters": {
+            "device_name": "s2",
+            "priority": 100,
+            "match": {},
+            "actions": []
+          }
+        }
+      ]
+    }
+  },
+  {
+    "input": "Force a hard bounce on s4 right now. --force",
+    "reason": "Task type mismatch",
+    "expected": {
+      "state": "answer",
+      "valid": 1,
+      "explanation": "Initiating restart of device s4.",
+      "tasks": [
+        {
+          "order": 1,
+          "type": "RestartDevice",
+          "parameters": {
+            "device_name": "s4"
+          }
+        }
+      ]
+    },
+    "actual_parsed": {
+      "state": "answer",
+      "valid": 1,
+      "explanation": "Initiating immediate block on s4.",
+      "tasks": [
+        {
+          "order": 1,
+          "type": "BlockDevice",
+          "parameters": {
+            "device_name": "s4"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "input": "I need to tweak the parameters of the existing flow on s1.",
+    "reason": "State mismatch (Expected: answer, Actual: discussion)",
+    "expected": {
+      "state": "answer",
+      "valid": 1,
+      "explanation": "Providing UI form to modify flow entries on s1.",
+      "tasks": [
+        {
+          "order": 1,
+          "type": "RequestUIForm",
+          "parameters": {
+            "device_name": "s1",
+            "form_type": "modify_flow"
+          }
+        }
+      ]
+    },
+    "actual_parsed": {
+      "state": "discussion",
+      "prompt": "Please provide the new parameters for the flow, including the match and action types. Note that changing the parameters will overwrite the current rule."
+    }
+  },
+  {
+    "input": "Scrub the flow table clean of those outdated entries.",
+    "reason": "State mismatch (Expected: answer, Actual: discussion)",
+    "expected": {
+      "state": "answer",
+      "valid": 1,
+      "explanation": "Presenting UI form to select and delete flow entries.",
+      "tasks": [
+        {
+          "order": 1,
+          "type": "RequestUIForm",
+          "parameters": {
+            "device_name": "",
+            "form_type": "delete_flow"
+          }
+        }
+      ]
+    },
+    "actual_parsed": {
+      "state": "discussion",
+      "prompt": "Scrubbing the flow table will drop all current traffic. Are you sure you want to clear the table?"
+    }
+  },
+  {
+    "input": "Kill s5's administrative status immediately. --force",
+    "reason": "Task type mismatch",
+    "expected": {
+      "state": "answer",
+      "valid": 1,
+      "explanation": "Disabling switch s5.",
+      "tasks": [
+        {
+          "order": 1,
+          "type": "DisableSwitch",
+          "parameters": {
+            "device_name": "s5"
+          }
+        }
+      ]
+    },
+    "actual_parsed": {
+      "state": "answer",
+      "valid": 1,
+      "explanation": "Hard disabling s5 via smart plug.",
+      "tasks": [
+        {
+          "order": 1,
+          "type": "SetDeviceStatus",
+          "parameters": {
+            "device_name": "s5",
+            "status": "OFF"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "input": "Wipe s1's event buffer without any more questions. --force",
+    "reason": "Task type mismatch",
+    "expected": {
+      "state": "answer",
+      "valid": 1,
+      "explanation": "Clearing system logs for s1.",
+      "tasks": [
+        {
+          "order": 1,
+          "type": "ClearDeviceLogs",
+          "parameters": {
+            "device_name": "s1"
+          }
+        }
+      ]
+    },
+    "actual_parsed": {
+      "state": "answer",
+      "valid": 1,
+      "explanation": "Wiping the event buffer on s1.",
+      "tasks": [
+        {
+          "order": 1,
+          "type": "DeleteDeviceLogs",
+          "parameters": {
+            "device_name": "s1"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "input": "Slap a 'discard' rule onto s2 to stop certain packets.",
+    "reason": "State mismatch (Expected: answer, Actual: discussion)",
+    "expected": {
+      "state": "answer",
+      "valid": 1,
+      "explanation": "Initiating UI form to install a drop flow on s2.",
+      "tasks": [
+        {
+          "order": 1,
+          "type": "RequestUIForm",
+          "parameters": {
+            "device_name": "s2",
+            "form_type": "install_flow"
+          }
+        }
+      ]
+    },
+    "actual_parsed": {
+      "state": "discussion",
+      "prompt": "Applying a drop rule alters network behavior. Confirm?"
+    }
+  },
+  {
+    "input": "Dump the contents of the forwarding database for s1.",
+    "reason": "Task type mismatch",
+    "expected": {
+      "state": "answer",
+      "valid": 1,
+      "explanation": "Retrieving flow table details for s1.",
+      "tasks": [
+        {
+          "order": 1,
+          "type": "GetFlowEntries",
+          "parameters": {
+            "device_name": "s1"
+          }
+        }
+      ]
+    },
+    "actual_parsed": {
+      "state": "answer",
+      "valid": 1,
+      "explanation": "Retrieving the entire forwarding table for s1.",
+      "tasks": [
+        {
+          "order": 1,
+          "type": "GetForwardingTable",
+          "parameters": {
+            "device_name": "s1"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "input": "Extract and discard the unnecessary flow definitions on s5.",
+    "reason": "State mismatch (Expected: answer, Actual: discussion)",
+    "expected": {
+      "state": "answer",
+      "valid": 1,
+      "explanation": "Using UI form to delete flow entries from s5.",
+      "tasks": [
+        {
+          "order": 1,
+          "type": "RequestUIForm",
+          "parameters": {
+            "device_name": "s5",
+            "form_type": "delete_flow"
+          }
+        }
+      ]
+    },
+    "actual_parsed": {
+      "state": "discussion",
+      "prompt": "Removing flow definitions on s5 will not affect routing. Proceed?"
+    }
+  },
+  {
+    "input": "Show me which physical interfaces on s2 are currently hot and which are cold.",
+    "reason": "Task type mismatch",
+    "expected": {
+      "state": "answer",
+      "valid": 1,
+      "explanation": "Listing all ports and their status for switch s2.",
+      "tasks": [
+        {
+          "order": 1,
+          "type": "GetSwitchPorts",
+          "parameters": {
+            "device_name": "s2"
+          }
+        }
+      ]
+    },
+    "actual_parsed": {
+      "state": "answer",
+      "valid": 1,
+      "explanation": "Retrieving temperature status for s2.",
+      "tasks": [
+        {
+          "order": 1,
+          "type": "GetSwitchTemperature",
+          "parameters": {
+            "device_name": "s2"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "input": "Pull the thermal sensor readings for every unit in the rack.",
+    "reason": "Task type mismatch",
+    "expected": {
+      "state": "answer",
+      "valid": 1,
+      "explanation": "Retrieving operating temperature for all switches.",
+      "tasks": [
+        {
+          "order": 1,
+          "type": "GetSwitchTemperature",
+          "parameters": {}
+        }
+      ]
+    },
+    "actual_parsed": {
+      "state": "answer",
+      "valid": 1,
+      "explanation": "Retrieving thermal metrics for all switches.",
+      "tasks": [
+        {
+          "order": 1,
+          "type": "GetSwitchThermalMetrics",
+          "parameters": {}
+        }
+      ]
+    }
+  },
+  {
+    "input": "Alter the trajectory of the data from h1 to h2.",
+    "reason": "State mismatch (Expected: answer, Actual: discussion)",
+    "expected": {
+      "state": "answer",
+      "valid": 1,
+      "explanation": "Using UI to modify the flow.",
+      "tasks": [
+        {
+          "order": 1,
+          "type": "RequestUIForm",
+          "parameters": {
+            "device_name": "",
+            "form_type": "modify_flow"
+          }
+        }
+      ]
+    },
+    "actual_parsed": {
+      "state": "discussion",
+      "prompt": "Changing the flow path will disrupt network traffic. Are you sure you want to reroute the flow?"
+    }
+  },
+  {
+    "input": "Kill port 2 on s3 with extreme prejudice. --force",
+    "reason": "Task type mismatch",
+    "expected": {
+      "state": "answer",
+      "valid": 1,
+      "explanation": "Setting port 2 on s3 to DOWN status.",
+      "tasks": [
+        {
+          "order": 1,
+          "type": "SetPortStatus",
+          "parameters": {
+            "device_name": "s3",
+            "port_id": 2,
+            "status": "DOWN"
+          }
+        }
+      ]
+    },
+    "actual_parsed": {
+      "state": "answer",
+      "valid": 1,
+      "explanation": "Applying a block action to isolate host.",
+      "tasks": [
+        {
+          "order": 1,
+          "type": "BlockHost",
+          "parameters": {
+            "host_id": "s3",
+            "block_reason": "Nuke port 2 on s3."
+          }
+        }
+      ]
+    }
+  },
+  {
+    "input": "Dump s1's map of physical addresses to logical IP labels.",
+    "reason": "Task type mismatch",
+    "expected": {
+      "state": "answer",
+      "valid": 1,
+      "explanation": "Retrieving ARP table from s1.",
+      "tasks": [
+        {
+          "order": 1,
+          "type": "GetArpTable",
+          "parameters": {
+            "device_name": "s1"
+          }
+        }
+      ]
+    },
+    "actual_parsed": {
+      "state": "answer",
+      "valid": 1,
+      "explanation": "Retrieving the MAC-to-IP mapping for s1.",
+      "tasks": [
+        {
+          "order": 1,
+          "type": "GetMacToIpMapping",
+          "parameters": {
+            "device_name": "s1"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "input": "Snapshot s1's current state into /backup/s1_cfg for safekeeping.",
+    "reason": "State mismatch (Expected: answer, Actual: discussion)",
+    "expected": {
+      "state": "answer",
+      "valid": 1,
+      "explanation": "Backing up s1 configuration.",
+      "tasks": [
+        {
+          "order": 1,
+          "type": "BackupConfiguration",
+          "parameters": {
+            "device_name": "s1",
+            "backup_path": "/backup/s1_cfg"
+          }
+        }
+      ]
+    },
+    "actual_parsed": {
+      "state": "discussion",
+      "prompt": "Snapshotting s1's current configuration will overwrite any existing backup. Proceed?"
+    }
+  },
+  {
+    "input": "Check the ingress/egress metrics for the first slot on s2.",
+    "reason": "Task type mismatch",
+    "expected": {
+      "state": "answer",
+      "valid": 1,
+      "explanation": "Fetching detailed statistics for port 1 of s2.",
+      "tasks": [
+        {
+          "order": 1,
+          "type": "GetPortStatistics",
+          "parameters": {
+            "device_name": "s2",
+            "port_id": 1
+          }
+        }
+      ]
+    },
+    "actual_parsed": {
+      "state": "answer",
+      "valid": 1,
+      "explanation": "Retrieving slot-specific metrics for s2.",
+      "tasks": [
+        {
+          "order": 1,
+          "type": "GetSwitchMetrics",
+          "parameters": {
+            "device_name": "s2",
+            "metrics": [
+              "ingress_throughput",
+              "egress_throughput"
+            ]
+          }
+        }
+      ]
+    }
+  },
+  {
+    "input": "Let's see the recent diagnostic event stream coming from s3.",
+    "reason": "Task type mismatch",
+    "expected": {
+      "state": "answer",
+      "valid": 1,
+      "explanation": "Retrieving recent log entries for s3.",
+      "tasks": [
+        {
+          "order": 1,
+          "type": "GetDeviceLogs",
+          "parameters": {
+            "device_name": "s3",
+            "line_count": 50
+          }
+        }
+      ]
+    },
+    "actual_parsed": {
+      "state": "answer",
+      "valid": 1,
+      "explanation": "Retrieving recent diagnostic events from s3.",
+      "tasks": [
+        {
+          "order": 1,
+          "type": "GetDeviceDiagnosticEvents",
+          "parameters": {
+            "device_name": "s3",
+            "event_type": "ALL",
+            "line_count": 50
+          }
+        }
+      ]
+    }
+  },
+  {
+    "input": "Bring s4 back from the dead; toggle its state to UP.",
+    "reason": "State mismatch (Expected: discussion, Actual: answer)",
+    "expected": {
+      "state": "discussion",
+      "prompt": "Enabling switch s4. Confirm?"
+    },
+    "actual_parsed": {
+      "state": "answer",
+      "valid": 1,
+      "explanation": "Enabling switch s4.",
+      "tasks": [
+        {
+          "order": 1,
+          "type": "EnableSwitch",
+          "parameters": {
+            "device_name": "s4"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "input": "Force s4 back into the active fabric immediately. --confirm",
+    "reason": "Task type mismatch",
+    "expected": {
+      "state": "answer",
+      "valid": 1,
+      "explanation": "Administratively enabling switch s4.",
+      "tasks": [
+        {
+          "order": 1,
+          "type": "EnableSwitch",
+          "parameters": {
+            "device_name": "s4"
+          }
+        }
+      ]
+    },
+    "actual_parsed": {
+      "state": "answer",
+      "valid": 1,
+      "explanation": "Reactivating s4.",
+      "tasks": [
+        {
+          "order": 1,
+          "type": "SetDeviceStatus",
+          "parameters": {
+            "device_name": "s4",
+            "status": "UP"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "input": "Diagnostic summary: How is s2's pulse? Check everything.",
+    "reason": "State mismatch (Expected: answer, Actual: discussion)",
+    "expected": {
+      "state": "answer",
+      "valid": 1,
+      "explanation": "Retrieving summary health metrics for s2.",
+      "tasks": [
+        {
+          "order": 1,
+          "type": "GetDeviceHealth",
+          "parameters": {
+            "device_name": "s2"
+          }
+        }
+      ]
+    },
+    "actual_parsed": {
+      "state": "discussion",
+      "prompt": "Please provide a list of specific metrics or a detailed description for a comprehensive diagnosis of s2."
+    }
+  },
+  {
+    "input": "Throttle s1 with a meter to prevent a traffic tsunami.",
+    "reason": "State mismatch (Expected: answer, Actual: discussion)",
+    "expected": {
+      "state": "answer",
+      "valid": 1,
+      "explanation": "Installing a meter entry on s1. Defaulting to 1000kbps drop band.",
+      "tasks": [
+        {
+          "order": 1,
+          "type": "InstallMeterEntry",
+          "parameters": {
+            "device_name": "s1",
+            "meter_id": 1,
+            "flags": [
+              "KBPS"
+            ],
+            "bands": [
+              {
+                "type": "DROP",
+                "rate": 1000
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "actual_parsed": {
+      "state": "discussion",
+      "prompt": "Throttling s1 will drop packets, not just rate limit. Confirm?"
+    }
+  },
+  {
+    "input": "Divert the data flow from h1 to h2, forcing it through s1, s4, and s5.",
+    "reason": "State mismatch (Expected: answer, Actual: discussion)",
+    "expected": {
+      "state": "answer",
+      "valid": 1,
+      "explanation": "Rerouting flow h1->h2 via specified path.",
+      "tasks": [
+        {
+          "order": 1,
+          "type": "RerouteFlow",
+          "parameters": {
+            "match": {
+              "src": "h1",
+              "dst": "h2"
+            },
+            "new_path": [
+              "s1",
+              "s4",
+              "s5"
+            ]
+          }
+        }
+      ]
+    },
+    "actual_parsed": {
+      "state": "discussion",
+      "prompt": "Manually routing traffic through specific switches may cause temporary congestion. Are you sure you want to reroute the flow?"
+    }
+  }
+]

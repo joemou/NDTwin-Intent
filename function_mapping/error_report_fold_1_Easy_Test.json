@@ -1,0 +1,432 @@
+[
+  {
+    "input": "Disable switch s1.",
+    "reason": "State mismatch (Expected: discussion, Actual: answer)",
+    "expected": {
+      "state": "discussion",
+      "prompt": "Disabling switch s1 may disrupt network traffic. Are you sure you want to proceed?"
+    },
+    "actual_parsed": {
+      "state": "answer",
+      "prompt": "",
+      "valid": 1,
+      "explanation": "Disabled switch s1",
+      "tasks": [
+        {
+          "order": 1,
+          "type": "DisableSwitch",
+          "parameters": {
+            "device_name": "s1"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "input": "Turn on switch s3.",
+    "reason": "Task type mismatch",
+    "expected": {
+      "state": "answer",
+      "valid": 1,
+      "explanation": "Turning on switch s3.",
+      "tasks": [
+        {
+          "order": 1,
+          "type": "PowerOnSwitch",
+          "parameters": {
+            "device_name": "s3"
+          }
+        }
+      ]
+    },
+    "actual_parsed": {
+      "state": "answer",
+      "prompt": "",
+      "valid": 1,
+      "explanation": "Enable switch operation",
+      "tasks": [
+        {
+          "order": 1,
+          "type": "EnableSwitch",
+          "parameters": {
+            "device_name": "s3"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "input": "Reboot switch s2.",
+    "reason": "State mismatch (Expected: discussion, Actual: answer)",
+    "expected": {
+      "state": "discussion",
+      "prompt": "Rebooting s2 will cause temporary downtime. Are you sure you want to reboot?"
+    },
+    "actual_parsed": {
+      "state": "answer",
+      "prompt": "",
+      "valid": 1,
+      "explanation": "Explicit network system reboot task",
+      "tasks": [
+        {
+          "order": 1,
+          "type": "RestartDevice",
+          "parameters": {
+            "device_name": "s2"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "input": "Shut down port 5 on switch s4.",
+    "reason": "State mismatch (Expected: discussion, Actual: answer)",
+    "expected": {
+      "state": "discussion",
+      "prompt": "Shutting down port 5 on s4 will disrupt link traffic. Confirm action?"
+    },
+    "actual_parsed": {
+      "state": "answer",
+      "valid": 1,
+      "explanation": "Disable port 5 on switch s4",
+      "tasks": [
+        {
+          "order": 1,
+          "type": "SetPortStatus",
+          "parameters": {
+            "device_name": "s4",
+            "port_id": 5,
+            "status": "down"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "input": "Set the power state of s2 to off.",
+    "reason": "State mismatch (Expected: discussion, Actual: answer)",
+    "expected": {
+      "state": "discussion",
+      "prompt": "Powering off s2 is a disruptive action. Are you sure?"
+    },
+    "actual_parsed": {
+      "state": "answer",
+      "prompt": "",
+      "valid": 1,
+      "explanation": "Disabling switch s2",
+      "tasks": [
+        {
+          "order": 1,
+          "type": "PowerOffSwitch",
+          "parameters": {
+            "device_name": "s2"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "input": "Restore the configuration for s5.",
+    "reason": "State mismatch (Expected: discussion, Actual: answer)",
+    "expected": {
+      "state": "discussion",
+      "prompt": "Restoring a configuration will overwrite current settings and may cause downtime. Confirm?"
+    },
+    "actual_parsed": {
+      "state": "answer",
+      "prompt": "",
+      "valid": 1,
+      "explanation": "Restoring device configuration.",
+      "tasks": [
+        {
+          "order": 1,
+          "type": "RestoreConfiguration",
+          "parameters": {
+            "device_name": "s5",
+            "restore_path": "/backup/s5.conf"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "input": "Update the firmware on core-switch-01.",
+    "reason": "State mismatch (Expected: discussion, Actual: answer)",
+    "expected": {
+      "state": "discussion",
+      "prompt": "Firmware updates require a reboot and will cause downtime. Are you sure?"
+    },
+    "actual_parsed": {
+      "state": "answer",
+      "prompt": "",
+      "valid": 1,
+      "explanation": "Update device firmware",
+      "tasks": [
+        {
+          "order": 1,
+          "type": "UpdateDeviceFirmware",
+          "parameters": {
+            "device_name": "core-switch-01",
+            "firmware_path": "/path/to/firmware"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "input": "Delete the flow entry with ID 45 on s1.",
+    "reason": "Failed to parse into a valid JSON format",
+    "expected": {
+      "state": "discussion",
+      "prompt": "Deleting flow entries may drop active connections. Please confirm."
+    },
+    "actual_parsed": null
+  },
+  {
+    "input": "Create a new group entry on s7.",
+    "reason": "Failed to parse into a valid JSON format",
+    "expected": {
+      "state": "answer",
+      "valid": 1,
+      "explanation": "Creating group entry.",
+      "tasks": [
+        {
+          "order": 1,
+          "type": "InstallGroupEntry",
+          "parameters": {
+            "device_name": "s7",
+            "group_type": "all",
+            "group_id": 1,
+            "buckets": [
+              {
+                "actions": []
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "actual_parsed": null
+  },
+  {
+    "input": "Install a rate-limiting meter on s3 using defaule setting",
+    "reason": "Failed to parse into a valid JSON format",
+    "expected": {
+      "state": "answer",
+      "valid": 1,
+      "explanation": "Installing meter entry.",
+      "tasks": [
+        {
+          "order": 1,
+          "type": "InstallMeterEntry",
+          "parameters": {
+            "device_name": "s3",
+            "meter_id": 1,
+            "flags": [],
+            "bands": [
+              {
+                "type": "drop",
+                "rate": 1000
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "actual_parsed": null
+  },
+  {
+    "input": "What is the bandwidth usage from s1 to s2 on port eth1 for 60 seconds?",
+    "reason": "Failed to parse into a valid JSON format",
+    "expected": {
+      "state": "answer",
+      "valid": 1,
+      "explanation": "Retrieving bandwidth usage successfully.",
+      "tasks": [
+        {
+          "order": 1,
+          "type": "GetALinkBandwidthUtilization",
+          "parameters": {
+            "src": "s1",
+            "dst": "s2",
+            "port": "eth1",
+            "duration": "60s"
+          }
+        }
+      ]
+    },
+    "actual_parsed": null
+  },
+  {
+    "input": "Which are the top 5 most congested links?",
+    "reason": "Failed to parse into a valid JSON format",
+    "expected": {
+      "state": "answer",
+      "valid": 1,
+      "explanation": "Retrieving most congested links.",
+      "tasks": [
+        {
+          "order": 1,
+          "type": "GetTopKCongestedLinks",
+          "parameters": {
+            "k": 5
+          }
+        }
+      ]
+    },
+    "actual_parsed": null
+  },
+  {
+    "input": "What's the latency between s2 and s3?",
+    "reason": "Failed to parse into a valid JSON format",
+    "expected": {
+      "state": "answer",
+      "valid": 1,
+      "explanation": "Measuring link latency.",
+      "tasks": [
+        {
+          "order": 1,
+          "type": "GetLinkLatency",
+          "parameters": {
+            "src": "s2",
+            "dst": "s3"
+          }
+        }
+      ]
+    },
+    "actual_parsed": null
+  },
+  {
+    "input": "Check the health status of router s1.",
+    "reason": "Failed to parse into a valid JSON format",
+    "expected": {
+      "state": "answer",
+      "valid": 1,
+      "explanation": "Retrieving health metrics.",
+      "tasks": [
+        {
+          "order": 1,
+          "type": "GetDeviceHealth",
+          "parameters": {
+            "device_name": "s1"
+          }
+        }
+      ]
+    },
+    "actual_parsed": null
+  },
+  {
+    "input": "List all hosts on the network.",
+    "reason": "Valid flag mismatch",
+    "expected": {
+      "state": "answer",
+      "valid": 1,
+      "explanation": "Listing all known hosts.",
+      "tasks": [
+        {
+          "order": 1,
+          "type": "GetAllHosts",
+          "parameters": {}
+        }
+      ]
+    },
+    "actual_parsed": {
+      "state": "answer",
+      "tasks": [
+        {
+          "order": 1,
+          "type": "GetAllHosts",
+          "parameters": {}
+        }
+      ]
+    }
+  },
+  {
+    "input": "What are the capabilities of switch s1?",
+    "reason": "Task count mismatch",
+    "expected": {
+      "state": "answer",
+      "valid": 1,
+      "explanation": "Retrieving OpenFlow capabilities.",
+      "tasks": [
+        {
+          "order": 1,
+          "type": "GetSwitchCapabilities",
+          "parameters": {}
+        }
+      ]
+    },
+    "actual_parsed": {
+      "state": "answer",
+      "prompt": "",
+      "valid": 1,
+      "explanation": "Predefined network task types",
+      "tasks": [
+        {
+          "order": 1,
+          "type": "GetSwitchCapabilities"
+        },
+        {
+          "order": 2,
+          "type": "GetArpTable",
+          "parameters": {
+            "device_name": "s1"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "input": "Traceroute a Host which is 192.168.1.5",
+    "reason": "Task type mismatch",
+    "expected": {
+      "state": "answer",
+      "valid": 1,
+      "explanation": "Running traceroute.",
+      "tasks": [
+        {
+          "order": 1,
+          "type": "TracerouteHost",
+          "parameters": {
+            "host": "192.168.1.5"
+          }
+        }
+      ]
+    },
+    "actual_parsed": {
+      "state": "answer",
+      "prompt": "",
+      "valid": 1,
+      "explanation": "Predefined network task",
+      "tasks": [
+        {
+          "order": 1,
+          "type": "GetSwitchCpuUtilization"
+        }
+      ]
+    }
+  },
+  {
+    "input": "Clear all system logs on switch s3.",
+    "reason": "State mismatch (Expected: discussion, Actual: answer)",
+    "expected": {
+      "state": "discussion",
+      "prompt": "Clearing logs deletes historical diagnostic data permanently. Confirm action?"
+    },
+    "actual_parsed": {
+      "state": "answer",
+      "prompt": "",
+      "valid": 1,
+      "explanation": "Clear system logs operation",
+      "tasks": [
+        {
+          "order": 1,
+          "type": "ClearDeviceLogs",
+          "parameters": {
+            "device_name": "s3"
+          }
+        }
+      ]
+    }
+  }
+]
