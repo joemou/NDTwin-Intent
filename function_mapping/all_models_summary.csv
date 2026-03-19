@@ -1,0 +1,5 @@
+Model Name,Overall Accuracy (%),Average Latency (s),P95 Latency (s),P99 Latency (s),Total Cost (USD),Total Tokens In,Total Tokens Out
+gpt-5-nano,91.25,10.7734,20.5561,27.4143,0.035944,105575,76664
+gpt-5-mini,90.00,7.3060,14.4088,18.0176,0.129341,131988,48172
+gpt-5,85.00,15.9278,41.3650,53.1457,0.836325,131988,67134
+gpt-5.4,88.42,1.3722,1.5799,5.5019,0.379870,125380,4428

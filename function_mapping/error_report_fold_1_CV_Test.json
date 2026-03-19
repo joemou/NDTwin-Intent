@@ -1,50 +1,17 @@
 [
   {
-    "input": "Slap a rate limit meter 1 dropping at 1000 on s5.",
-    "reason": "State mismatch (Expected: answer, Actual: discussion)",
-    "expected": {
-      "state": "answer",
-      "valid": 1,
-      "explanation": "Installing a meter entry on s5 to rate limit traffic.",
-      "tasks": [
-        {
-          "order": 1,
-          "type": "InstallMeterEntry",
-          "parameters": {
-            "device_name": "s5",
-            "meter_id": 1,
-            "flags": [
-              "KBPS"
-            ],
-            "bands": [
-              {
-                "type": "DROP",
-                "rate": 1000
-              }
-            ]
-          }
-        }
-      ]
-    },
-    "actual_parsed": {
-      "state": "discussion",
-      "prompt": "Applying a rate limit meter will discard packets above the threshold. Confirm?"
-    }
-  },
-  {
-    "input": "Get the path from h3 to h7.",
+    "input": "Enable logging.",
     "reason": "Task type mismatch",
     "expected": {
       "state": "answer",
       "valid": 1,
-      "explanation": "Finding the routing path between h3 and h7.",
+      "explanation": "Enabling system-wide historical logging.",
       "tasks": [
         {
           "order": 1,
-          "type": "GetPath",
+          "type": "ToggleHistoricalLogging",
           "parameters": {
-            "src": "h3",
-            "dst": "h7"
+            "state": "ON"
           }
         }
       ]
@@ -52,97 +19,42 @@
     "actual_parsed": {
       "state": "answer",
       "valid": 1,
-      "explanation": "Retrieving path from h3 to h7.",
+      "explanation": "Enabling system-wide logging.",
       "tasks": [
         {
           "order": 1,
-          "type": "GetPathSwitches",
+          "type": "ToggleSystemLogging",
           "parameters": {
-            "src": "h3",
-            "dst": "h7"
+            "state": "ON"
           }
         }
       ]
     }
   },
   {
-    "input": "List all ports status on s3.",
+    "input": "List all devices on the network.",
     "reason": "Task type mismatch",
     "expected": {
       "state": "answer",
       "valid": 1,
-      "explanation": "Retrieving s3 port status list.",
+      "explanation": "Retrieving all known hosts.",
       "tasks": [
         {
           "order": 1,
-          "type": "GetSwitchPorts",
-          "parameters": {
-            "device_name": "s3"
-          }
-        }
-      ]
-    },
-    "actual_parsed": {
-      "state": "answer",
-      "valid": 1,
-      "explanation": "Retrieving port statistics for s3.",
-      "tasks": [
-        {
-          "order": 1,
-          "type": "GetPortStatistics",
-          "parameters": {
-            "device_name": "s3"
-          }
-        }
-      ]
-    }
-  },
-  {
-    "input": "Check the memory utilization.",
-    "reason": "State mismatch (Expected: answer, Actual: discussion)",
-    "expected": {
-      "state": "answer",
-      "valid": 1,
-      "explanation": "Checking memory usage for all active switches.",
-      "tasks": [
-        {
-          "order": 1,
-          "type": "GetSwitchMemoryUtilization",
+          "type": "GetAllHosts",
           "parameters": {}
         }
       ]
     },
     "actual_parsed": {
-      "state": "discussion",
-      "prompt": "Please specify which device's memory utilization you want to check."
-    }
-  },
-  {
-    "input": "Edit rule on s4 to output to port 4.",
-    "reason": "State mismatch (Expected: discussion, Actual: answer)",
-    "expected": {
-      "state": "discussion",
-      "prompt": "Editing a rule will change routing paths. Confirm?"
-    },
-    "actual_parsed": {
       "state": "answer",
       "valid": 1,
-      "explanation": "Modifying rule on s4.",
+      "explanation": "Retrieving list of all known switches.",
       "tasks": [
         {
           "order": 1,
-          "type": "ModifyFlowEntry",
-          "parameters": {
-            "device_name": "s4",
-            "priority": 100,
-            "match": {},
-            "actions": [
-              {
-                "type": "OUTPUT",
-                "port": 4
-              }
-            ]
-          }
+          "type": "GetAllDevices",
+          "parameters": {}
         }
       ]
     }
@@ -180,6 +92,19 @@
     }
   },
   {
+    "input": "Monitor real-time traffic on switch s1.",
+    "reason": "State mismatch (Expected: answer, Actual: discussion)",
+    "expected": {
+      "state": "answer",
+      "valid": 0,
+      "explanation": "Missing port ID and duration parameters for real-time traffic monitoring."
+    },
+    "actual_parsed": {
+      "state": "discussion",
+      "prompt": "Please provide the port ID and duration parameters for real-time traffic monitoring on s1."
+    }
+  },
+  {
     "input": "Show all active flows.",
     "reason": "Task type mismatch",
     "expected": {
@@ -201,8 +126,30 @@
       "tasks": [
         {
           "order": 1,
-          "type": "GetActiveFlowEntryList",
+          "type": "GetAllFlows",
           "parameters": {}
+        }
+      ]
+    }
+  },
+  {
+    "input": "Reset the port statistics counters for s2.",
+    "reason": "State mismatch (Expected: discussion, Actual: answer)",
+    "expected": {
+      "state": "discussion",
+      "prompt": "Resetting port statistics will erase all historical interface data. Proceed?"
+    },
+    "actual_parsed": {
+      "state": "answer",
+      "valid": 1,
+      "explanation": "Resetting port stats for s2.",
+      "tasks": [
+        {
+          "order": 1,
+          "type": "ResetPortStatistics",
+          "parameters": {
+            "device_name": "s2"
+          }
         }
       ]
     }
